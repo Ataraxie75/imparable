@@ -1,0 +1,79 @@
+---
+import '../styles/global.css';
+import '../styles/outils.css';
+
+interface Props {
+  titre: string;
+  description: string;
+}
+
+const { titre, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titre} · IMPARABLE</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:title" content={titre} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.png', Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;600&display=swap"
+    />
+  </head>
+  <body>
+    <header class="entete">
+      <nav class="conteneur entete-nav" aria-label="Navigation principale">
+        <a href="/" class="logo">IMPARABLE</a>
+        <div class="entete-liens">
+          <a href="/resolutions">Bibliothèque</a>
+          <a href="/guides">Guides</a>
+          <a href="/methodologie">Méthodologie</a>
+          <a href="/audit" class="bouton bouton-voltage bouton-nav">Vérifier mon AG</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="pied">
+      <div class="conteneur pied-grille">
+        <div>
+          <p class="logo">IMPARABLE</p>
+          <p>
+            Vérification formelle de la conformité des convocations d'assemblée générale de
+            copropriété. Moteur déterministe, règles publiées, références à l'appui.
+          </p>
+        </div>
+        <div>
+          <p class="pied-titre">Produit</p>
+          <a href="/">Calculateur de délai</a>
+          <a href="/resolutions">Bibliothèque de résolutions</a>
+          <a href="/guides">Guides</a>
+          <a href="/audit">Audit de convocation</a>
+        </div>
+        <div>
+          <p class="pied-titre">Confiance</p>
+          <a href="/methodologie">Méthodologie &amp; sources</a>
+          <p class="pied-note">
+            IMPARABLE vérifie la forme d'une convocation ; il ne délivre pas de conseil juridique.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

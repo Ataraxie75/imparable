@@ -1,0 +1,166 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Calculateur from '../../components/Calculateur';
+import { LIBELLES_REGIME } from '../../lib/moteur/audit';
+import DOCUMENTS from '../../lib/moteur/documents.json';
+
+export async function getStaticPaths() {
+  const fiches = await getCollection('resolutions', ({ data }) => data.published);
+  return fiches.map((fiche) => ({ params: { slug: fiche.slug }, props: { fiche } }));
+}
+
+interface Props {
+  fiche: CollectionEntry<'resolutions'>;
+}
+
+const { fiche } = Astro.props;
+const { Content } = await fiche.render();
+
+// Texte du modèle, extrait pour le bouton « Copier la résolution ».
+const corpsModele = (/## Modèle de résolution\s+([\s\S]*?)(?=\n## |$)/.exec(fiche.body)?.[1] ?? '')
+  .trim()
+  .replace(/^«\s*|\s*»$/g, '');
+
+const liees = (await getCollection('resolutions', ({ data }) => data.published))
+  .filter((f) => f.data.categorie === fiche.data.categorie && f.slug !== fiche.slug)
+  .slice(0, 3);
+
+const documentsExiges = fiche.data.documentsExiges.map(
+  (slug) => (DOCUMENTS as Record<string, string>)[slug] ?? slug,
+);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      headline: fiche.data.titre,
+      inLanguage: 'fr-FR',
+      about: 'Assemblée générale de copropriété',
+      dateModified: fiche.data.verifieLe,
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: `Quelle majorité pour « ${fiche.data.titre} » ?`,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `${LIBELLES_REGIME[fiche.data.regime]} — ${fiche.data.refLegale}.`,
+          },
+        },
+        {
+          '@type': 'Question',
+          name: `Quel est le piège de la résolution « ${fiche.data.titre} » ?`,
+          acceptedAnswer: { '@type': 'Answer', text: fiche.data.piege },
+        },
+      ],
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Bibliothèque', item: new URL('/resolutions/', Astro.site).href },
+        { '@type': 'ListItem', position: 2, name: fiche.data.titre },
+      ],
+    },
+  ],
+};
+---
+
+<Layout
+  titre={`${fiche.data.titre} — modèle et majorité`}
+  description={`Modèle de résolution « ${fiche.data.titre} » : texte à copier, majorité requise (${LIBELLES_REGIME[fiche.data.regime]}), documents à joindre et piège juridique.`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <div class="conteneur section">
+    <nav class="aide" aria-label="Fil d'Ariane" style="margin-bottom: 18px;">
+      <a href="/resolutions">Bibliothèque</a> · {fiche.data.titre}
+    </nav>
+
+    <div class="meta" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <span class="badge">{LIBELLES_REGIME[fiche.data.regime]}</span>
+      {fiche.data.contextuel && (
+        <span class="pastille-verdict verdict-vigilance" style="font-size:0.78rem; padding:4px 12px;">
+          ⚠ régime selon le contexte
+        </span>
+      )}
+      <span class="aide">{fiche.data.refLegale} · vérifié le {fiche.data.verifieLe}</span>
+    </div>
+    <h1 style="margin-top:10px;">{fiche.data.titre}</h1>
+
+    <div class="fiche-grille">
+      <article>
+        <div class="modele-bloc">
+          <button class="bouton bouton-voltage bouton-copier" data-modele={corpsModele}>
+            Copier la résolution
+          </button>
+          <div class="prose">
+            <Content />
+          </div>
+        </div>
+
+        {fiche.data.variables.length > 0 && (
+          <p class="aide" style="margin-top:14px;">
+            Variables à remplacer : {fiche.data.variables.map((v) => `{${v}}`).join(' · ')}
+          </p>
+        )}
+
+        <div class="encart-piege">
+          <strong>⚠ Le piège</strong>
+          <p style="margin:6px 0 0;">{fiche.data.piege}</p>
+        </div>
+
+        {documentsExiges.length > 0 && (
+          <div class="carte" style="margin-top:24px;">
+            <h3>Documents à joindre à la convocation</h3>
+            <ul>
+              {documentsExiges.map((doc) => <li>{doc}</li>)}
+            </ul>
+            <p class="aide">
+              Notification au plus tard avec la convocation (art. 11, décret n°67-223 du 17 mars
+              1967) : un document manquant expose la résolution à l'annulation.
+            </p>
+          </div>
+        )}
+
+        <div class="carte" style="margin-top:24px; text-align:center;">
+          <h3>Cette résolution part dans une convocation&nbsp;?</h3>
+          <p>Vérifiez les 10 causes de nullité — 3 minutes.</p>
+          <a class="bouton bouton-voltage" href="/audit">Vérifier ma convocation</a>
+        </div>
+      </article>
+
+      <aside>
+        <Calculateur client:visible />
+        {liees.length > 0 && (
+          <div style="margin-top:24px;">
+            <h3>Fiches liées</h3>
+            {liees.map((f) => (
+              <a class="carte fiche-carte" style="margin-bottom:12px;" href={`/resolutions/${f.slug}/`}>
+                <span class="badge">{LIBELLES_REGIME[f.data.regime]}</span>
+                <h3>{f.data.titre}</h3>
+              </a>
+            ))}
+          </div>
+        )}
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll<HTMLButtonElement>('.bouton-copier').forEach((bouton) => {
+      bouton.addEventListener('click', async () => {
+        const texte = bouton.dataset.modele ?? '';
+        await navigator.clipboard.writeText(texte);
+        const libelle = bouton.textContent;
+        bouton.textContent = 'Copié';
+        setTimeout(() => {
+          bouton.textContent = libelle;
+        }, 1600);
+      });
+    });
+  </script>
+</Layout>

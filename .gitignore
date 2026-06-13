@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+*.log
+.env
+.env.*
+src/lib/moteur/taxonomie.generated.ts

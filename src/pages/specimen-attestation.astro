@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { computeAudit } from '../lib/moteur/audit';
+import { TAXONOMIE } from '../lib/moteur/taxonomie.generated';
+import { ATTESTATION_CSS, attestationFragmentHTML } from '../lib/pdf/attestation';
+import type { ReponsesAudit } from '../lib/moteur/types';
+
+// Spécimen rendu au build depuis le vrai moteur et la vraie taxonomie :
+// ce que montre cette page est exactement ce que produit l'audit.
+const reponses: ReponsesAudit = {
+  delai: { mode: 'lrar', dateNotification: '2026-05-12', dateAG: '2026-06-09' },
+  modeAdmisPourTous: true,
+  mentions: { lieuDateHeure: true, ordreDuJourComplet: true, consultationPieces: true },
+  formulaireVoteJoint: true,
+  resolutions: [
+    {
+      slug: 'budget-previsionnel',
+      majoriteAnnoncee: 'art24',
+      documentsJoints: ['budget-previsionnel-detaille'],
+    },
+    {
+      slug: 'designation-syndic',
+      majoriteAnnoncee: 'art25',
+      documentsJoints: ['projet-contrat-syndic'],
+    },
+  ],
+  convocateur: { qualite: 'syndic', mandatEnCours: true },
+};
+
+const resultat = computeAudit(reponses, TAXONOMIE);
+const fragment = attestationFragmentHTML(reponses, resultat, {
+  numero: 'IMP-2026-00042',
+  emiseLe: '13/06/2026, 10:00 (heure de Paris)',
+  urlVerification: 'https://imparable.fr/verifier/IMP-2026-00042',
+  specimen: true,
+});
+---
+
+<Layout
+  titre="Spécimen d'attestation de vérification"
+  description="À quoi ressemble l'attestation IMPARABLE : computation complète du délai, points contrôlés A–E avec références, numéro vérifiable en ligne, version des règles appliquées."
+>
+  <style is:global set:html={ATTESTATION_CSS}></style>
+  <div class="conteneur section">
+    <h1 class="section-titre">L'attestation, en vrai</h1>
+    <p class="section-sous-titre">
+      Spécimen généré par le moteur lui-même, sur un dossier d'exemple conforme. Si l'audit
+      relève des points à corriger, le document devient un « Rapport de vérification » qui
+      s'ouvre sur les corrections, chacune avec son action et sa date.
+    </p>
+    <Fragment set:html={fragment} />
+    <p style="text-align:center; margin-top:32px;">
+      <a class="bouton bouton-voltage" href="/audit">Obtenir la vôtre — audit en 3 minutes</a>
+    </p>
+  </div>
+</Layout>

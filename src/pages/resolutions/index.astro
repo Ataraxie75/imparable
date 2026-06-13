@@ -1,0 +1,100 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { LIBELLES_REGIME } from '../../lib/moteur/audit';
+
+const fiches = (await getCollection('resolutions', ({ data }) => data.published)).sort((a, b) =>
+  a.data.titre.localeCompare(b.data.titre, 'fr'),
+);
+
+const CATEGORIES: Record<string, string> = {
+  comptes: 'Comptes',
+  budget: 'Budget',
+  syndic: 'Syndic',
+  'conseil-syndical': 'Conseil syndical',
+  travaux: 'Travaux',
+  'parties-communes': 'Parties communes',
+  reglement: 'Règlement',
+  divers: 'Divers',
+};
+
+const categoriesPresentes = [...new Set(fiches.map((f) => f.data.categorie))];
+const regimesPresents = [...new Set(fiches.map((f) => f.data.regime))];
+---
+
+<Layout
+  titre="Bibliothèque de résolutions d'AG de copropriété"
+  description="Modèles de résolutions d'assemblée générale de copropriété : texte à copier, majorité requise (art. 24, 25, 26, unanimité), documents à joindre et piège juridique. Accès libre."
+>
+  <div class="conteneur section">
+    <h1 class="section-titre">Bibliothèque de résolutions</h1>
+    <p class="section-sous-titre">
+      {fiches.length} fiches en accès libre : modèle de texte, majorité requise, documents à
+      joindre, et le piège que les modèles gratuits ne signalent pas.
+    </p>
+
+    <div class="filtres" id="filtres-categorie" role="group" aria-label="Filtrer par catégorie">
+      <button class="filtre actif" data-filtre="">Toutes</button>
+      {categoriesPresentes.map((c) => (
+        <button class="filtre" data-filtre={c}>{CATEGORIES[c] ?? c}</button>
+      ))}
+    </div>
+    <div class="filtres" id="filtres-regime" role="group" aria-label="Filtrer par majorité">
+      <button class="filtre actif" data-filtre="">Toutes majorités</button>
+      {regimesPresents.map((r) => (
+        <button class="filtre" data-filtre={r}>{LIBELLES_REGIME[r]}</button>
+      ))}
+    </div>
+
+    <div class="grille-3" id="grille-fiches">
+      {fiches.map((fiche) => (
+        <a
+          class="carte fiche-carte"
+          href={`/resolutions/${fiche.slug}/`}
+          data-categorie={fiche.data.categorie}
+          data-regime={fiche.data.regime}
+        >
+          <div class="meta">
+            <span class="badge">
+              {LIBELLES_REGIME[fiche.data.regime]}{fiche.data.contextuel && ' ⚠'}
+            </span>
+            <span class="aide">{CATEGORIES[fiche.data.categorie]}</span>
+          </div>
+          <h3>{fiche.data.titre}</h3>
+          <p class="fiche-piege-apercu">⚠ {fiche.data.piege}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <script>
+    // Filtre client-side simple (PRD §9) — pas de dépendance.
+    const etat = { categorie: '', regime: '' };
+    const fiches = document.querySelectorAll<HTMLElement>('#grille-fiches [data-categorie]');
+
+    function appliquer() {
+      fiches.forEach((f) => {
+        const visible =
+          (etat.categorie === '' || f.dataset.categorie === etat.categorie) &&
+          (etat.regime === '' || f.dataset.regime === etat.regime);
+        f.style.display = visible ? '' : 'none';
+      });
+    }
+
+    function brancher(idGroupe: string, cle: 'categorie' | 'regime') {
+      const groupe = document.getElementById(idGroupe);
+      if (!groupe) return;
+      groupe.querySelectorAll<HTMLButtonElement>('.filtre').forEach((bouton) => {
+        bouton.addEventListener('click', () => {
+          etat[cle] = bouton.dataset.filtre ?? '';
+          groupe.querySelectorAll('.filtre').forEach((b) => b.classList.remove('actif'));
+          bouton.classList.add('actif');
+          appliquer();
+        });
+      });
+    }
+
+    brancher('filtres-categorie', 'categorie');
+    brancher('filtres-regime', 'regime');
+  </script>
+</Layout>

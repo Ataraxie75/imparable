@@ -1,0 +1,90 @@
+---
+// E7 — vérification d'authenticité (PRD §12) : numéro, date d'émission,
+// type, verdict global, rulesVersion. AUCUNE donnée personnelle.
+import Layout from '../../layouts/Layout.astro';
+import { ConfigurationManquante } from '../../lib/serveur/env';
+import { clientAnon } from '../../lib/serveur/supabase';
+
+export const prerender = false;
+
+const numero = Astro.params.numero ?? '';
+const FORMAT_NUMERO = /^IMP-\d{4}-\d{5}$/;
+
+interface Verification {
+  numero: string;
+  emise_le: string;
+  type: string;
+  statut_global: string;
+  rules_version: string;
+}
+
+let verification: Verification | null = null;
+let etat: 'ok' | 'inconnu' | 'format' | 'non_configure' = 'inconnu';
+
+if (!FORMAT_NUMERO.test(numero)) {
+  etat = 'format';
+} else {
+  try {
+    const { data } = await clientAnon().rpc('verifier_attestation', { p_numero: numero });
+    const ligne = Array.isArray(data) ? (data[0] as Verification | undefined) : undefined;
+    if (ligne) {
+      verification = ligne;
+      etat = 'ok';
+    }
+  } catch (erreur) {
+    etat = erreur instanceof ConfigurationManquante ? 'non_configure' : 'inconnu';
+  }
+}
+
+const LIBELLES: Record<string, string> = {
+  conforme: 'Conforme',
+  non_conforme: 'Non conforme',
+  vigilance: 'Vigilances signalées',
+};
+---
+
+<Layout
+  titre={`Vérification du document ${numero}`}
+  description="Vérification d'authenticité d'une attestation ou d'un rapport IMPARABLE."
+>
+  <div class="conteneur section" style="max-width:640px;">
+    <h1>Vérification d'authenticité</h1>
+    {etat === 'ok' && verification && (
+      <div class="carte">
+        <p class="pastille-verdict verdict-conforme">Document authentique</p>
+        <table style="margin-top:14px;">
+          <tbody>
+            <tr><td>Numéro</td><td><strong>{verification.numero}</strong></td></tr>
+            <tr><td>Type</td><td>{verification.type === 'attestation' ? 'Attestation de vérification de conformité' : 'Rapport de vérification'}</td></tr>
+            <tr><td>Émis le</td><td>{new Date(verification.emise_le).toLocaleString('fr-FR', { timeZone: 'Europe/Paris' })}</td></tr>
+            <tr><td>Verdict global</td><td>{LIBELLES[verification.statut_global] ?? verification.statut_global}</td></tr>
+            <tr><td>Version des règles</td><td>{verification.rules_version}</td></tr>
+          </tbody>
+        </table>
+        <p class="aide" style="margin-top:14px;">
+          Cette page ne contient aucune donnée personnelle. Le document atteste d'une
+          vérification formelle ; il ne constitue pas un conseil juridique.
+        </p>
+      </div>
+    )}
+    {etat === 'inconnu' && (
+      <div class="carte">
+        <p class="pastille-verdict verdict-annulable">Document inconnu</p>
+        <p style="margin-top:12px;">
+          Aucun document n'a été émis sous le numéro <strong>{numero}</strong>. Si ce numéro
+          figure sur un document qu'on vous présente, celui-ci n'émane pas d'IMPARABLE.
+        </p>
+      </div>
+    )}
+    {etat === 'format' && (
+      <div class="carte">
+        <p>Format de numéro invalide (attendu : IMP-AAAA-00000).</p>
+      </div>
+    )}
+    {etat === 'non_configure' && (
+      <div class="carte">
+        <p>La vérification n'est pas encore activée sur cet environnement (LOT 4 en attente de clés).</p>
+      </div>
+    )}
+  </div>
+</Layout>

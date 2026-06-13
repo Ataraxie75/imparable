@@ -1,0 +1,122 @@
+---
+// E6 — livraison (PRD §12) : détail complet + document + confirmation email.
+import Layout from '../../layouts/Layout.astro';
+import { ConfigurationManquante } from '../../lib/serveur/env';
+import { clientServiceRole } from '../../lib/serveur/supabase';
+import { lienDocument } from '../../lib/stripe/webhook';
+import type { ResultatAudit, ResultatItem } from '../../lib/moteur/types';
+
+export const prerender = false;
+
+const sessionId = Astro.url.searchParams.get('session_id');
+
+let etat: 'ok' | 'introuvable' | 'en_cours' | 'non_configure' = 'introuvable';
+let items: ResultatItem[] = [];
+let global: string = '';
+let rulesVersion = '';
+let numero: string | null = null;
+let lien: string | null = null;
+
+if (sessionId) {
+  try {
+    const supabase = clientServiceRole();
+    const { data: audit } = await supabase
+      .from('audits')
+      .select('id, resultat, statut_global, rules_version, paid_at')
+      .eq('stripe_session_id', sessionId)
+      .maybeSingle();
+
+    if (audit && audit.paid_at) {
+      const resultat = audit.resultat as ResultatAudit;
+      if (resultat.global !== 'hors_perimetre') {
+        items = resultat.items;
+        global = resultat.global;
+        rulesVersion = resultat.rulesVersion;
+      }
+      const { data: attestation } = await supabase
+        .from('attestations')
+        .select('numero')
+        .eq('audit_id', audit.id)
+        .maybeSingle();
+      if (attestation) {
+        numero = attestation.numero;
+        lien = await lienDocument(attestation.numero);
+        etat = 'ok';
+      } else {
+        etat = 'en_cours'; // paiement validé, émission en cours (webhook)
+      }
+    } else if (audit) {
+      etat = 'en_cours';
+    }
+  } catch (erreur) {
+    etat = erreur instanceof ConfigurationManquante ? 'non_configure' : 'introuvable';
+  }
+}
+
+const LIBELLES: Record<string, string> = {
+  conforme: 'Convocation conforme',
+  non_conforme: 'Convocation non conforme — AG annulable',
+  vigilance: 'Points de vigilance à faire vérifier',
+};
+---
+
+<Layout titre="Votre audit complet" description="Livraison de votre audit de conformité et de votre attestation.">
+  <div class="conteneur section" style="max-width:820px;">
+    {etat === 'ok' && (
+      <>
+        <h1>Votre audit complet</h1>
+        <p class="section-sous-titre" style="text-align:left;">
+          Document n° <strong>{numero}</strong> · règles vérifiées au {rulesVersion} · un email de
+          confirmation vous a été envoyé. Authenticité vérifiable sur
+          <a href={`/verifier/${numero}`}> /verifier/{numero}</a>.
+        </p>
+        <p>
+          {lien && <a class="bouton bouton-voltage" href={lien}>Télécharger le document</a>}
+        </p>
+        <div class={`verdict-carte verdict-${global === 'non_conforme' ? 'annulable' : global}`}>
+          <div class="verdict-titre">{LIBELLES[global]}</div>
+        </div>
+        <div style="margin-top:20px;">
+          {items.map((item) => (
+            <div class={`item-audit statut-${item.statut}`}>
+              <span class="code">{item.code} — {item.libelle}</span>
+              <p style="margin:4px 0 0; font-size:0.95rem;">{item.explication}</p>
+              {item.actionCorrective && (
+                <p style="margin:4px 0 0; font-size:0.95rem;"><strong>Action :</strong> {item.actionCorrective}</p>
+              )}
+              <p class="aide" style="margin:4px 0 0;">{item.refLegale}</p>
+            </div>
+          ))}
+        </div>
+        <div class="ancrage" style="margin-top:32px;">
+          Plus de 10 AG par an ? Le Pass Cabinet (290 €/an) rend les audits et attestations
+          illimités, avec votre logo sur les documents.
+        </div>
+      </>
+    )}
+    {etat === 'en_cours' && (
+      <>
+        <h1>Paiement reçu — émission en cours</h1>
+        <p>
+          Votre document est en cours d'émission (quelques secondes). Rechargez cette page ;
+          vous recevrez également un email avec le lien.
+        </p>
+      </>
+    )}
+    {etat === 'introuvable' && (
+      <>
+        <h1>Session introuvable</h1>
+        <p>
+          Cette page est accessible après un paiement validé. Si vous venez de payer, patientez
+          quelques secondes puis rechargez. Sinon, <a href="/audit">reprenez votre audit</a>.
+        </p>
+      </>
+    )}
+    {etat === 'non_configure' && (
+      <>
+        <h1>Paiement pas encore activé</h1>
+        <p>Cet environnement n'a pas de configuration de paiement (LOT 4 en attente de clés).</p>
+      </>
+    )}
+  </div>
+</Layout>

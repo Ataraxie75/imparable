@@ -1,0 +1,36 @@
+{
+  "name": "imparable",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "IMPARABLE — Vérificateur de conformité des AG de copropriété + Bibliothèque de résolutions",
+  "scripts": {
+    "predev": "node scripts/gen-taxonomie.mjs",
+    "dev": "astro dev",
+    "gen": "node scripts/gen-taxonomie.mjs",
+    "gates": "node scripts/gen-taxonomie.mjs && node scripts/check-resolutions.mjs && node scripts/check-color-tokens.mjs && vitest run",
+    "prebuild": "npm run gates",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "test": "node scripts/gen-taxonomie.mjs && vitest run",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/react": "^3.6.3",
+    "@astrojs/sitemap": "3.2.1",
+    "@astrojs/vercel": "^7.8.2",
+    "@supabase/supabase-js": "^2.108.1",
+    "astro": "^4.16.18",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "resend": "^6.12.4",
+    "stripe": "^22.2.1",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "vitest": "^2.1.9"
+  }
+}

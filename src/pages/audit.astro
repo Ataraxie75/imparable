@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Wizard from '../components/wizard/Wizard';
+---
+
+<Layout
+  titre="Audit de conformité de votre convocation d'AG"
+  description="Vérifiez les causes de nullité de votre convocation d'assemblée générale de copropriété : délai, notification, mentions, documents joints, majorités, convocateur. Verdict point par point."
+>
+  <div class="conteneur section">
+    <h1 class="section-titre">Audit de votre convocation</h1>
+    <p class="section-sous-titre">
+      Cinq blocs de contrôle, chacun adossé à son texte. Vos réponses restent dans votre
+      navigateur : aucun nom, aucune donnée de tiers n'est demandée. Reprenez où vous en étiez,
+      la saisie est conservée.
+    </p>
+    <Wizard client:load />
+  </div>
+</Layout>

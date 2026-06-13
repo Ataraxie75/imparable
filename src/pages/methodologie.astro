@@ -1,0 +1,170 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { RULES_VERSION } from '../lib/moteur/audit';
+
+// E10 — la transparence EST le marketing (PRD §12) : toutes les règles
+// R1–R7 et la grille A–E publiées, avec leurs textes.
+const regles = [
+  {
+    code: 'R1',
+    titre: 'Point de départ (J1)',
+    texte:
+      "LRAR : J1 = lendemain de la première présentation (pas l'envoi, pas le retrait). Remise en main propre contre récépissé ou émargement : J1 = jour de la remise. Lettre recommandée électronique : J1 = lendemain de l'envoi.",
+    source: 'art. 64, décret n°67-223 du 17 mars 1967',
+  },
+  {
+    code: 'R2',
+    titre: 'Durée N',
+    texte:
+      "N = max(21, délai du règlement de copropriété). 21 jours est d'ordre public : toute saisie inférieure est ramenée à 21, avec message explicite. Saisie possible jusqu'à 90 jours.",
+    source: 'art. 9, décret n°67-223 du 17 mars 1967',
+  },
+  {
+    code: 'R3',
+    titre: 'Dernier jour',
+    texte: 'dernierJour = J1 + (N − 1). Le N-ième jour expire à minuit.',
+    source: 'art. 9 et 64, décret n°67-223 du 17 mars 1967',
+  },
+  {
+    code: 'R4',
+    titre: "Première date légale d'AG",
+    texte:
+      "agLegale = J1 + N. L'assemblée ne peut se tenir qu'à partir du (N+1)-ième jour : le jour de l'AG ne compte jamais dans le délai.",
+    source: 'art. 9, décret n°67-223 du 17 mars 1967 · Cass. 3e civ., 4 déc. 2025',
+  },
+  {
+    code: 'R5',
+    titre: 'Pas de prorogation',
+    texte:
+      "L'art. 642 al. 2 du code de procédure civile (report au premier jour ouvrable) ne s'applique pas à ce délai : dimanches et jours fériés ne décalent rien.",
+    source: 'jurisprudence constante sur les délais de convocation',
+  },
+  {
+    code: 'R6',
+    titre: 'Verdict',
+    texte:
+      'conforme si dateAG ≥ agLegale, sinon annulable. Sortie systématique : verdict, première date légale, dernier jour du délai, marge signée en jours.',
+    source: 'art. 42, loi n°65-557 du 10 juillet 1965',
+  },
+  {
+    code: 'R7',
+    titre: 'Hors périmètre',
+    texte:
+      "Convocation d'urgence (« délai raisonnable ») : non modélisée. Le moteur ne rend jamais de verdict sur un cas non modélisé et renvoie vers un avocat.",
+    source: 'art. 9 al. 3, décret n°67-223 du 17 mars 1967',
+  },
+];
+
+const blocs = [
+  {
+    code: 'A',
+    titre: 'Délai & notification',
+    items:
+      'Computation complète du délai (R1–R7) · mode de notification admis pour chaque copropriétaire · si LRE : accord exprès préalable du destinataire.',
+    source: 'art. 9 et 64, décret de 1967 · art. 42-1, loi de 1965',
+  },
+  {
+    code: 'B',
+    titre: 'Mentions de la convocation',
+    items:
+      "Lieu, date et heure de l'assemblée · ordre du jour énumérant chaque question · modalités de consultation des pièces justificatives des charges.",
+    source: 'art. 9, 11 et 13, décret de 1967',
+  },
+  {
+    code: 'C',
+    titre: 'Documents joints par résolution',
+    items:
+      'Pour chaque résolution, la checklist des annexes exigées (comptes, budget, devis et contrats, projet de contrat de syndic…) + le formulaire de vote par correspondance, toujours exigé.',
+    source: 'art. 11, décret de 1967 · art. 17-1 A, loi de 1965',
+  },
+  {
+    code: 'D',
+    titre: 'Majorité par résolution',
+    items:
+      'La majorité annoncée dans le projet de résolution est confrontée au régime de la Bibliothèque (générée depuis les mêmes fiches : aucune divergence possible, par construction). Résolution hors référentiel → vigilance.',
+    source: 'art. 24, 25 et 26, loi de 1965',
+  },
+  {
+    code: 'E',
+    titre: 'Qualité du convocateur',
+    items:
+      "Convocateur = syndic en exercice · mandat non expiré à la date d'envoi · conseil syndical, copropriétaire habilité ou administrateur provisoire → vigilance + renvoi.",
+    source: 'art. 7 et 8, décret de 1967',
+  },
+];
+---
+
+<Layout
+  titre="Méthodologie & sources"
+  description="Toutes les règles du moteur IMPARABLE, publiées avec leurs textes : computation du délai de convocation d'AG (R1–R7) et grille des causes de nullité (blocs A–E)."
+>
+  <div class="conteneur section">
+    <h1 class="section-titre">Méthodologie &amp; sources</h1>
+    <p class="section-sous-titre">
+      Le verdict est produit par un moteur déterministe : mêmes entrées, même sortie, toujours.
+      Voici l'intégralité des règles appliquées — version du {RULES_VERSION}.
+    </p>
+
+    <div class="carte" style="margin-bottom:32px;">
+      <h2>Les trois principes</h2>
+      <p>
+        <strong>Déterminisme.</strong> Aucun modèle statistique, aucune IA : chaque règle est du
+        code vérifié par des tests adossés aux textes et aux arrêts. Le build du site échoue si
+        un seul test échoue.
+      </p>
+      <p>
+        <strong>Humilité.</strong> Toute réponse ambiguë, tout cas non couvert produit une
+        « vigilance », jamais un « conforme ». Le moteur préfère « faites vérifier ce point » à
+        une fausse certitude.
+      </p>
+      <p style="margin-bottom:0;">
+        <strong>Périmètre.</strong> IMPARABLE vérifie la forme d'une convocation. Il ne délivre
+        pas de conseil juridique et refuse de conclure sur les cas non modélisés (convocations
+        d'urgence, situations contentieuses).
+      </p>
+    </div>
+
+    <h2>MOTEUR-DELAI — règles R1 à R7</h2>
+    <div class="carte" style="overflow-x:auto; margin-bottom:32px;">
+      <table>
+        <thead>
+          <tr><th>Règle</th><th>Spécification</th><th>Source</th></tr>
+        </thead>
+        <tbody>
+          {regles.map((r) => (
+            <tr>
+              <td><strong>{r.code} — {r.titre}</strong></td>
+              <td>{r.texte}</td>
+              <td class="aide">{r.source}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h2>MOTEUR-AUDIT — grille des causes de nullité</h2>
+    <div class="carte" style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr><th>Bloc</th><th>Points contrôlés</th><th>Base légale</th></tr>
+        </thead>
+        <tbody>
+          {blocs.map((b) => (
+            <tr>
+              <td><strong>{b.code} — {b.titre}</strong></td>
+              <td>{b.items}</td>
+              <td class="aide">{b.source}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <p class="aide" style="margin-top:24px;">
+      Sources normatives : loi n°65-557 du 10 juillet 1965 fixant le statut de la copropriété ·
+      décret n°67-223 du 17 mars 1967 · Cass. 3<sup>e</sup> civ., 4 décembre 2025. Chaque fiche
+      de la Bibliothèque porte la date de sa vérification sur Légifrance ; chaque attestation
+      porte la version des règles appliquées.
+    </p>
+  </div>
+</Layout>

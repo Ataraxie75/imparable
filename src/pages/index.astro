@@ -1,0 +1,152 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Calculateur from '../components/Calculateur';
+import { RULES_VERSION, LIBELLES_REGIME } from '../lib/moteur/audit';
+
+const fiches = (await getCollection('resolutions', ({ data }) => data.published)).slice(0, 3);
+
+const tarifs = [
+  {
+    nom: 'Verdict',
+    prix: '0 €',
+    detail: 'Calculateur de délai illimité, sans inscription. Le verdict ne se monnaye pas.',
+  },
+  {
+    nom: 'Bibliothèque',
+    prix: '0 €',
+    detail: 'Toutes les fiches résolution, intégralement : modèle, majorité, piège, références.',
+  },
+  {
+    nom: 'Audit + Attestation',
+    prix: '29 €',
+    suffixe: '/ AG',
+    detail:
+      'Audit des 5 blocs de causes de nullité + attestation PDF numérotée, vérifiable en ligne.',
+    vedette: true,
+  },
+  {
+    nom: 'Pass Cabinet',
+    prix: '290 €',
+    suffixe: '/ an',
+    detail: 'Audits et attestations illimités, logo du cabinet sur les PDF, historique, multi-utilisateurs.',
+  },
+];
+---
+
+<Layout
+  titre="Mon AG est-elle attaquable ? Verdict en 60 secondes"
+  description="Vérifiez la conformité de votre convocation d'assemblée générale de copropriété : délai de 21 jours, mentions, documents, majorités. Moteur déterministe, règles publiées."
+>
+  <div class="conteneur">
+    <section class="hero">
+      <div>
+        <p class="surtitre">Copropriété · Assemblées générales</p>
+        <h1>Votre AG est-elle attaquable&nbsp;?</h1>
+        <p>
+          Une convocation non conforme expose <strong>toutes les décisions votées</strong> à
+          l'annulation (art. 42, loi du 10 juillet 1965). Le calcul du délai de 21 jours est
+          assez retors pour que la Cour de cassation ait dû corriger une cour d'appel
+          (Cass. 3<sup>e</sup> civ., 4 déc. 2025).
+        </p>
+        <ul class="hero-points">
+          <li>Verdict CONFORME / ANNULABLE instantané, gratuit, sans compte</li>
+          <li>Moteur 100&nbsp;% déterministe — zéro IA, zéro approximation</li>
+          <li>Chaque règle publiée avec son texte : <a href="/methodologie">méthodologie ouverte</a></li>
+          <li>Aucune donnée collectée : le calcul reste dans votre navigateur</li>
+        </ul>
+      </div>
+      <Calculateur client:load />
+    </section>
+
+    <section class="section">
+      <h2 class="section-titre">Le délai n'est qu'une cause de nullité parmi dix</h2>
+      <p class="section-sous-titre">
+        L'audit complet contrôle cinq blocs, chacun adossé à son texte. Trois minutes de
+        questions, un verdict point par point.
+      </p>
+      <div class="grille-3">
+        <div class="carte">
+          <h3>1 — Répondez au questionnaire</h3>
+          <p>
+            Délai et mode de notification, mentions de la convocation, documents joints,
+            majorités annoncées, qualité du convocateur. Aucune donnée de tiers demandée.
+          </p>
+        </div>
+        <div class="carte">
+          <h3>2 — Lisez le verdict</h3>
+          <p>
+            Chaque point est conforme, non conforme ou en vigilance — jamais de fausse
+            certitude : tout cas ambigu est renvoyé à une vérification humaine.
+          </p>
+        </div>
+        <div class="carte">
+          <h3>3 — Repartez avec la preuve</h3>
+          <p>
+            Attestation PDF numérotée, horodatée, vérifiable en ligne, avec la version des
+            règles appliquées et l'action corrective de chaque point à reprendre.
+          </p>
+        </div>
+      </div>
+      <p style="text-align:center; margin-top:28px;">
+        <a class="bouton bouton-voltage" href="/audit">Vérifier ma convocation — 3 minutes</a>
+      </p>
+    </section>
+
+    <section class="section">
+      <h2 class="section-titre">La Bibliothèque de résolutions</h2>
+      <p class="section-sous-titre">
+        Modèle de texte, majorité requise et piège juridique pour chaque résolution d'AG.
+        En accès libre, intégralement.
+      </p>
+      <div class="grille-3">
+        {fiches.map((fiche) => (
+          <a class="carte fiche-carte" href={`/resolutions/${fiche.slug}/`}>
+            <div class="meta">
+              <span class="badge">{LIBELLES_REGIME[fiche.data.regime]}</span>
+            </div>
+            <h3>{fiche.data.titre}</h3>
+            <p class="fiche-piege-apercu">⚠ {fiche.data.piege}</p>
+          </a>
+        ))}
+      </div>
+      <p style="text-align:center; margin-top:28px;">
+        <a class="bouton bouton-secondaire" href="/resolutions">Parcourir toutes les fiches</a>
+      </p>
+    </section>
+
+    <section class="section" id="tarifs">
+      <h2 class="section-titre">Tarifs</h2>
+      <p class="section-sous-titre">
+        Le verdict et la Bibliothèque sont gratuits. Le payant, c'est la preuve.
+      </p>
+      <div class="grille-4">
+        {tarifs.map((t) => (
+          <div class={`carte ${t.vedette ? 'carte-vedette' : ''}`}>
+            {t.vedette && <span class="badge">Le produit</span>}
+            <h3>{t.nom}</h3>
+            <p class="tarif-prix">{t.prix}{t.suffixe && <small> {t.suffixe}</small>}</p>
+            <p style="font-size:0.92rem;">{t.detail}</p>
+          </div>
+        ))}
+      </div>
+      <p class="ancrage">
+        Une AG annulée, c'est une reconvocation en recommandé pour tout l'immeuble, une nouvelle
+        séance et une responsabilité engagée&nbsp;: plusieurs milliers d'euros. La vérification
+        en coûte 29. <a href="/specimen-attestation">Voir un spécimen d'attestation</a>.
+      </p>
+    </section>
+
+    <section class="section">
+      <div class="carte" style="text-align:center;">
+        <h2>Zéro IA, zéro approximation</h2>
+        <p style="max-width:640px; margin:0 auto 1em;">
+          Le verdict est produit par un moteur déterministe : les mêmes entrées donnent toujours
+          la même sortie, et chaque règle est publiée avec le texte qui la fonde. Règles
+          vérifiées au {RULES_VERSION}.
+        </p>
+        <a class="bouton bouton-secondaire" href="/methodologie">Lire la méthodologie et les sources</a>
+      </div>
+    </section>
+  </div>
+</Layout>

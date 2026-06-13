@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const guides = (await getCollection('guides', ({ data }) => data.published)).sort((a, b) =>
+  a.data.titre.localeCompare(b.data.titre, 'fr'),
+);
+---
+
+<Layout
+  titre="Guides — convocation et nullité des AG de copropriété"
+  description="Guides pratiques sur la convocation d'assemblée générale de copropriété : délai de 21 jours, ordre du jour, documents à joindre, majorités, contestation. Chaque règle avec son texte."
+>
+  <div class="conteneur section">
+    <h1 class="section-titre">Guides</h1>
+    <p class="section-sous-titre">
+      {guides.length} guides sur la convocation et la nullité des assemblées générales.
+      Chaque affirmation porte sa référence ; chaque guide embarque le calculateur de délai.
+    </p>
+    <div class="grille-3">
+      {guides.map((guide) => (
+        <a class="carte fiche-carte" href={`/guides/${guide.slug}/`}>
+          <h3>{guide.data.titre}</h3>
+          <p class="fiche-piege-apercu">{guide.data.description}</p>
+        </a>
+      ))}
+    </div>
+  </div>
+</Layout>

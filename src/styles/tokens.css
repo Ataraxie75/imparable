@@ -1,0 +1,52 @@
+/*
+ * tokens.css — SOURCE UNIQUE du design IMPARABLE (PRD §13).
+ * Seul fichier autorisé à contenir des couleurs hexadécimales
+ * (gate CI : scripts/check-color-tokens.mjs).
+ *
+ * DA violette : fond dégradé lavande · voltage violet→magenta sur chrome/CTA
+ * uniquement · cartes blanches r=24px, ombres violettes douces ·
+ * sémantique verdict HORS charte (jamais violet).
+ */
+:root {
+  /* Fond */
+  --fond-debut: #f5effc;
+  --fond-fin: #f3ecfb;
+
+  /* Voltage — chrome & CTA uniquement, jamais sur la sémantique verdict */
+  --voltage-1: #a855f7;
+  --voltage-2: #8b3df5;
+  --voltage-3: #c026d3;
+  --voltage-grad: linear-gradient(100deg, var(--voltage-1), var(--voltage-2) 55%, var(--voltage-3));
+  --voltage-ombre: rgba(139, 61, 245, 0.28);
+
+  /* Encres */
+  --encre: #231a35;
+  --encre-2: #4c4361;
+  --encre-3: #756a8c;
+  --encre-inverse: #ffffff;
+
+  /* Surfaces */
+  --carte: #ffffff;
+  --carte-bord: rgba(139, 61, 245, 0.12);
+  --carte-ombre: 0 18px 44px -18px rgba(139, 61, 245, 0.25);
+  --carte-rayon: 24px;
+  --voile-violet: rgba(168, 85, 247, 0.08);
+
+  /* Sémantique verdict — jamais violet (PRD §13) */
+  --verdict-conforme: #16a34a;
+  --verdict-conforme-fond: #ecfdf3;
+  --verdict-annulable: #e11d48;
+  --verdict-annulable-fond: #fff1f2;
+  --verdict-vigilance: #d97706;
+  --verdict-vigilance-fond: #fffbeb;
+
+  /* Typographie */
+  --police-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --police-texte: 'Inter', system-ui, sans-serif;
+  --graisse-display: 800;
+
+  /* Rythme */
+  --rayon-bouton: 14px;
+  --rayon-champ: 12px;
+  --largeur-page: 1080px;
+}

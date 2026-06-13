@@ -1,0 +1,80 @@
+---
+import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Calculateur from '../../components/Calculateur';
+import { LIBELLES_REGIME } from '../../lib/moteur/audit';
+
+export async function getStaticPaths() {
+  const guides = await getCollection('guides', ({ data }) => data.published);
+  return guides.map((guide) => ({ params: { slug: guide.slug }, props: { guide } }));
+}
+
+interface Props {
+  guide: CollectionEntry<'guides'>;
+}
+
+const { guide } = Astro.props;
+const { Content } = await guide.render();
+
+const fichesLiees = (
+  await Promise.all(guide.data.fichesLiees.map((slug) => getEntry('resolutions', slug)))
+).filter((f): f is CollectionEntry<'resolutions'> => f !== undefined && f.data.published);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      headline: guide.data.titre,
+      description: guide.data.description,
+      inLanguage: 'fr-FR',
+      dateModified: guide.data.verifieLe,
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Guides', item: new URL('/guides/', Astro.site).href },
+        { '@type': 'ListItem', position: 2, name: guide.data.titre },
+      ],
+    },
+  ],
+};
+---
+
+<Layout titre={guide.data.titre} description={guide.data.description}>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
+
+  <div class="conteneur section">
+    <nav class="aide" aria-label="Fil d'Ariane" style="margin-bottom: 18px;">
+      <a href="/guides">Guides</a> · {guide.data.titre}
+    </nav>
+    <h1>{guide.data.titre}</h1>
+    <p class="aide">Règles vérifiées au {guide.data.verifieLe}.</p>
+
+    <div class="fiche-grille" style="margin-top: 24px;">
+      <article class="prose carte">
+        <Content />
+      </article>
+
+      <aside>
+        <Calculateur client:visible />
+        {fichesLiees.length > 0 && (
+          <div style="margin-top:24px;">
+            <h3>Fiches résolution liées</h3>
+            {fichesLiees.map((f) => (
+              <a class="carte fiche-carte" style="margin-bottom:12px;" href={`/resolutions/${f.slug}/`}>
+                <span class="badge">{LIBELLES_REGIME[f.data.regime]}</span>
+                <h3>{f.data.titre}</h3>
+              </a>
+            ))}
+          </div>
+        )}
+        <div class="carte" style="margin-top:24px; text-align:center;">
+          <h3>Une convocation à vérifier&nbsp;?</h3>
+          <p>Les 10 causes de nullité, point par point.</p>
+          <a class="bouton bouton-voltage" href="/audit">Lancer l'audit</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</Layout>

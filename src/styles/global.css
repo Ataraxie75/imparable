@@ -1,0 +1,174 @@
+/* Styles globaux — consomme exclusivement les tokens (PRD §13). */
+@import './tokens.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(160deg, var(--fond-debut), var(--fond-fin));
+  color: var(--encre);
+  font-family: var(--police-texte);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--police-display);
+  font-weight: var(--graisse-display);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--encre);
+  margin: 0 0 0.5em;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
+h2 { font-size: clamp(1.5rem, 3.5vw, 2.1rem); }
+h3 { font-size: 1.25rem; }
+
+p { margin: 0 0 1em; color: var(--encre-2); }
+
+a { color: var(--voltage-2); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.conteneur {
+  max-width: var(--largeur-page);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.carte {
+  background: var(--carte);
+  border: 1px solid var(--carte-bord);
+  border-radius: var(--carte-rayon);
+  box-shadow: var(--carte-ombre);
+  padding: 28px;
+}
+
+/* Boutons */
+.bouton {
+  display: inline-block;
+  border: 0;
+  border-radius: var(--rayon-bouton);
+  padding: 14px 26px;
+  font-family: var(--police-display);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.bouton-voltage {
+  background: var(--voltage-grad);
+  color: var(--encre-inverse);
+  box-shadow: 0 12px 28px -10px var(--voltage-ombre);
+}
+
+.bouton-voltage:hover {
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+.bouton-secondaire {
+  background: var(--carte);
+  color: var(--voltage-2);
+  border: 1.5px solid var(--voltage-2);
+}
+
+/* Champs de formulaire */
+.champ {
+  display: block;
+  width: 100%;
+  border: 1.5px solid var(--carte-bord);
+  border-radius: var(--rayon-champ);
+  background: var(--carte);
+  color: var(--encre);
+  font: inherit;
+  padding: 11px 14px;
+}
+
+.champ:focus {
+  outline: 2px solid var(--voltage-1);
+  outline-offset: 1px;
+  border-color: var(--voltage-1);
+}
+
+.etiquette {
+  display: block;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--encre);
+  margin-bottom: 6px;
+}
+
+.aide {
+  font-size: 0.85rem;
+  color: var(--encre-3);
+  margin-top: 4px;
+}
+
+/* Badges régime (chrome → voltage admis) */
+.badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: var(--police-display);
+  background: var(--voile-violet);
+  color: var(--voltage-2);
+}
+
+/* Sémantique verdict — hors charte violette, toujours */
+.verdict-conforme { color: var(--verdict-conforme); background: var(--verdict-conforme-fond); }
+.verdict-annulable { color: var(--verdict-annulable); background: var(--verdict-annulable-fond); }
+.verdict-vigilance { color: var(--verdict-vigilance); background: var(--verdict-vigilance-fond); }
+
+.pastille-verdict {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 6px 18px;
+  font-weight: 800;
+  font-family: var(--police-display);
+  letter-spacing: 0.02em;
+}
+
+/* Encart piège */
+.encart-piege {
+  border-left: 4px solid var(--verdict-vigilance);
+  background: var(--verdict-vigilance-fond);
+  border-radius: 0 var(--rayon-champ) var(--rayon-champ) 0;
+  padding: 16px 20px;
+  margin: 24px 0;
+}
+
+.encart-piege strong { color: var(--verdict-vigilance); }
+
+/* Tableaux */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--carte-bord);
+  vertical-align: top;
+}
+
+th {
+  font-family: var(--police-display);
+  font-size: 0.85rem;
+  color: var(--encre-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
