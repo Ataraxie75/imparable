@@ -3,11 +3,7 @@ titre: "La passerelle de l'article 25-1 : adopter au second vote ce qui a échou
 description: "Comment fonctionne la passerelle de majorité de l'article 25-1 de la loi de 1965 : seuil du tiers des voix, second vote immédiat à la majorité de l'article 24, mentions au procès-verbal."
 verifieLe: "2026-06-13"
 fichesLiees: ["election-conseil-syndical", "designation-syndic", "travaux-amelioration"]
-statsCles:
-  - chiffre: "1/3"
-    label: "des voix pour déclencher la passerelle"
-  - chiffre: "2e vote"
-    label: "immédiat, à la majorité simple (art. 24)"
+accroche: "Un tiers des voix suffit à rejouer le vote sur-le-champ, à la majorité simple. Encore faut-il y penser en séance."
 published: true
 ---
 Beaucoup de résolutions relevant de la majorité absolue de l'article 25 échouent non par opposition, mais par absentéisme : la majorité se compte sur **tous** les copropriétaires, absents compris. La passerelle de l'article 25-1 est le mécanisme de rattrapage — souvent ignoré, alors qu'il se joue en séance.

@@ -3,11 +3,7 @@ titre: "Rédiger l'ordre du jour d'une AG de copropriété sans exposer les vote
 description: "L'ordre du jour doit énumérer chaque question soumise au vote de l'assemblée générale : précision exigée, questions de droit, 'questions diverses' interdites de vote."
 verifieLe: "2026-06-13"
 fichesLiees: ["fibre-optique", "designation-syndic", "plan-pluriannuel-travaux"]
-statsCles:
-  - chiffre: "0"
-    label: "décision votable en « questions diverses »"
-  - chiffre: "art. 13"
-    label: "décret du 17 mars 1967"
+accroche: "On ne vote que ce qui est écrit. Une décision prise hors de l'ordre du jour ne survit pas à un recours."
 published: true
 ---
 L'assemblée générale ne peut valablement délibérer **que sur les questions inscrites à l'ordre du jour** (art. 13 du décret du 17 mars 1967). Toute décision votée sur une question absente, ou formulée trop vaguement pour que les copropriétaires aient pu se prononcer en connaissance de cause, est annulable.

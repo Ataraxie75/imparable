@@ -3,11 +3,7 @@ titre: "Le formulaire de vote par correspondance est-il obligatoire ? Oui, pour 
 description: "Depuis 2020, le formulaire de vote par correspondance doit être joint à toute convocation d'AG de copropriété : modèle réglementaire, délai de réception, traitement des votes."
 verifieLe: "2026-06-13"
 fichesLiees: ["election-conseil-syndical", "designation-syndic"]
-statsCles:
-  - chiffre: "Exigé"
-    label: "pour toute convocation, sans exception"
-  - chiffre: "3 jours"
-    label: "francs avant l'AG pour le renvoyer"
+accroche: "Depuis 2020, aucune convocation n'est complète sans lui. L'oublier, c'est priver chaque copropriétaire d'un droit de vote."
 published: true
 ---
 Depuis la réforme de 2019-2020, **tout copropriétaire peut voter par correspondance** avant l'assemblée générale (art. 17-1 A de la loi du 10 juillet 1965). La conséquence pratique est radicale : le formulaire de vote par correspondance doit être joint à **chaque** convocation, pour toute assemblée, quel que soit son ordre du jour.

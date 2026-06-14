@@ -3,11 +3,7 @@ titre: "Documents à joindre à la convocation d'AG : la checklist par type de r
 description: "Comptes, budget, devis, projet de contrat de syndic, formulaire de vote par correspondance : les documents que l'article 11 du décret de 1967 impose de notifier avec la convocation d'AG."
 verifieLe: "2026-06-13"
 fichesLiees: ["approbation-comptes", "budget-previsionnel", "designation-syndic", "contrats-entretien-marches"]
-statsCles:
-  - chiffre: "art. 11"
-    label: "ce qui doit être joint, à la lettre"
-  - chiffre: "1 oubli"
-    label: "= la résolution exposée à l'annulation"
+accroche: "Une convocation se juge à ses annexes. Une pièce manquante, et la résolution qu'elle appuie s'effondre."
 published: true
 ---
 L'article 11 du décret du 17 mars 1967 subordonne la **validité même des décisions** à la notification, au plus tard en même temps que l'ordre du jour, des documents nécessaires au vote. Un document manquant n'est pas un détail : c'est une cause d'annulation de la résolution concernée.

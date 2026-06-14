@@ -54,19 +54,8 @@ const schema = {
     <div class="guide-entete">
       <h1>{guide.data.titre}</h1>
       <div class="guide-souligne"></div>
-      <p class="guide-lead">{guide.data.description}</p>
+      {guide.data.accroche && <p class="guide-accroche">{guide.data.accroche}</p>}
     </div>
-
-    {guide.data.statsCles.length > 0 && (
-      <div class="stats-cercles">
-        {guide.data.statsCles.map((s) => (
-          <div class="stat-cercle">
-            <div class="stat-cercle-disque"><span class="stat-cercle-chiffre">{s.chiffre}</span></div>
-            <div class="stat-cercle-label">{s.label}</div>
-          </div>
-        ))}
-      </div>
-    )}
 
     <div class="fiche-grille" style="margin-top: 40px;">
       <article class="prose carte">

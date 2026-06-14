@@ -3,11 +3,7 @@ titre: "Contester une AG de copropriété : le délai de deux mois de l'article 
 description: "Qui peut contester une assemblée générale de copropriété, dans quel délai, et avec quelles conséquences : le régime de l'action en annulation de l'article 42 de la loi de 1965."
 verifieLe: "2026-06-13"
 fichesLiees: ["modification-repartition-charges", "travaux-amelioration"]
-statsCles:
-  - chiffre: "2 mois"
-    label: "pour agir après notification du PV"
-  - chiffre: "Opposant"
-    label: "ou défaillant : seuls eux peuvent agir"
+accroche: "Deux mois, jour pour jour, après la notification du procès-verbal. Passé ce délai, même l'irrégulier devient définitif."
 published: true
 ---
 L'action en contestation des décisions d'assemblée générale est enfermée dans un cadre strict par l'article 42 de la loi du 10 juillet 1965. Le connaître sert les deux camps : celui qui conteste, et celui qui veut sécuriser son assemblée.
