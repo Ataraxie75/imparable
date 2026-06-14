@@ -190,6 +190,20 @@
   margin-bottom: 4px;
 }
 
+/* Écran d'accueil du wizard */
+.wizard-intro-etapes { list-style: none; counter-reset: e; padding: 0; margin: 22px 0 26px; }
+.wizard-intro-etapes li {
+  counter-increment: e; position: relative; padding-left: 40px; margin-bottom: 12px;
+  color: var(--encre-2); font-size: 0.98rem;
+}
+.wizard-intro-etapes li::before {
+  content: counter(e); position: absolute; left: 0; top: -2px;
+  width: 28px; height: 28px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--police-display); font-weight: 800; font-size: 0.82rem;
+  color: var(--encre-inverse); background: var(--voltage-grad);
+}
+
 .tri-etat { display: flex; gap: 10px; flex-wrap: wrap; }
 .tri-etat label {
   border: 1.5px solid var(--carte-bord);

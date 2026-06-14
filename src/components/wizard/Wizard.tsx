@@ -25,6 +25,8 @@ interface ResolutionWizard {
 }
 
 interface EtatWizard {
+  /** false tant que l'utilisateur n'a pas cliqué « Commencer » (écran d'accueil). */
+  demarre: boolean;
   etape: number;
   mode: ModeNotification;
   dateNotification: string;
@@ -44,6 +46,7 @@ interface EtatWizard {
 }
 
 const ETAT_INITIAL: EtatWizard = {
+  demarre: false,
   etape: 0,
   mode: 'lrar',
   dateNotification: '',
@@ -120,7 +123,10 @@ export default function Wizard() {
     try {
       const brut = window.localStorage.getItem(CLE_STOCKAGE);
       if (brut) {
-        setEtat({ ...ETAT_INITIAL, ...(JSON.parse(brut) as Partial<EtatWizard>) });
+        const sauve = JSON.parse(brut) as Partial<EtatWizard>;
+        // Une session en cours saute l'accueil (l'utilisateur reprend où il en était).
+        const demarre = sauve.demarre ?? ((sauve.etape ?? 0) > 0 || !!sauve.dateNotification);
+        setEtat({ ...ETAT_INITIAL, ...sauve, demarre });
       } else {
         const calc = window.localStorage.getItem(CLE_CALCULATEUR);
         if (calc) {
@@ -164,15 +170,46 @@ export default function Wizard() {
 
   return (
     <div className="carte calculateur" style={{ maxWidth: 760, margin: '0 auto' }}>
-      <div className="wizard-progression" aria-hidden="true">
-        {ETAPES.map((s, i) => (
-          <span key={s.titre} className={i <= etat.etape ? 'actif' : ''} />
-        ))}
-      </div>
-      <p className="wizard-bloc-titre">
-        {etat.etape < 5 ? `Étape ${etat.etape + 1} / 5 — Bloc ${etapeCourante.bloc}` : 'Verdict'}
-      </p>
-      <h3 style={{ marginBottom: 20 }}>{etapeCourante.titre}</h3>
+      {!etat.demarre && (
+        <div className="wizard-intro">
+          <p className="wizard-bloc-titre">Audit de conformité · gratuit</p>
+          <h3 style={{ marginBottom: 10 }}>Votre convocation est-elle attaquable&nbsp;?</h3>
+          <p>
+            En 5 étapes et environ 3 minutes, on vérifie les causes qui peuvent faire annuler
+            votre assemblée générale. Verdict immédiat et gratuit.
+          </p>
+          <p className="aide" style={{ marginBottom: 4 }}>
+            Ayez votre convocation sous la main. Aucune donnée personnelle n'est demandée :
+            seulement des dates et des cases à cocher.
+          </p>
+          <ol className="wizard-intro-etapes">
+            <li>Délai &amp; notification</li>
+            <li>Mentions de la convocation</li>
+            <li>Résolutions &amp; documents joints</li>
+            <li>Majorités annoncées</li>
+            <li>Qualité du convocateur</li>
+          </ol>
+          <button
+            type="button"
+            className="bouton bouton-voltage"
+            onClick={() => maj({ demarre: true })}
+          >
+            Commencer l'audit &rarr;
+          </button>
+        </div>
+      )}
+
+      {etat.demarre && (
+        <>
+          <div className="wizard-progression" aria-hidden="true">
+            {ETAPES.map((s, i) => (
+              <span key={s.titre} className={i <= etat.etape ? 'actif' : ''} />
+            ))}
+          </div>
+          <p className="wizard-bloc-titre">
+            {etat.etape < 5 ? `Étape ${etat.etape + 1} sur 5` : 'Verdict'}
+          </p>
+          <h3 style={{ marginBottom: 20 }}>{etapeCourante.titre}</h3>
 
       {etat.etape === 0 && (
         <>
@@ -514,6 +551,8 @@ export default function Wizard() {
             {etat.etape === 4 ? 'Voir le verdict' : 'Continuer'}
           </button>
         </div>
+      )}
+        </>
       )}
     </div>
   );
