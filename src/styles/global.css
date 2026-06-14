@@ -12,7 +12,11 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: linear-gradient(160deg, var(--fond-debut), var(--fond-fin));
+  /* Fond lavande + quadrillage subtil (DA app). */
+  background:
+    linear-gradient(var(--grille-ligne) 1px, transparent 1px) 0 0 / 34px 34px,
+    linear-gradient(90deg, var(--grille-ligne) 1px, transparent 1px) 0 0 / 34px 34px,
+    linear-gradient(160deg, var(--fond-debut), var(--fond-fin)) fixed;
   color: var(--encre);
   font-family: var(--police-texte);
   font-size: 16px;
@@ -32,6 +36,14 @@ h1, h2, h3, h4 {
 h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
 h2 { font-size: clamp(1.5rem, 3.5vw, 2.1rem); }
 h3 { font-size: 1.25rem; }
+
+/* Mot accentué dans un titre — bicolore, comme les maquettes app. */
+.titre-accent {
+  background: var(--voltage-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 
 p { margin: 0 0 1em; color: var(--encre-2); }
 

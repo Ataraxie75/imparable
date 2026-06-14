@@ -36,7 +36,7 @@ const tarifs = [
     <section class="hero">
       <div>
         <p class="surtitre">Copropriété · Assemblées générales</p>
-        <h1>Votre AG est-elle attaquable&nbsp;?</h1>
+        <h1>Votre AG est-elle <span class="titre-accent">attaquable&nbsp;?</span></h1>
         <p>
           Une convocation non conforme expose <strong>toutes les décisions votées</strong> à
           l'annulation (art. 42, loi du 10 juillet 1965). Le calcul du délai de 21 jours est
@@ -96,8 +96,9 @@ const tarifs = [
       <div class="grille-3">
         {fiches.map((fiche) => (
           <a class="carte fiche-carte" href={`/resolutions/${fiche.slug}/`}>
-            <div class="meta">
-              <span class="badge">{LIBELLES_REGIME[fiche.data.regime]}</span>
+            <div class="fiche-meta">
+              <span class="fiche-cat">Résolution</span>
+              <span class="badge">{LIBELLES_REGIME[fiche.data.regime]}{fiche.data.contextuel && ' ⚠'}</span>
             </div>
             <h3>{fiche.data.titre}</h3>
             <p class="fiche-piege-apercu">⚠ {fiche.data.piege}</p>

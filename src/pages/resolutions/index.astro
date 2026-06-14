@@ -54,11 +54,11 @@ const regimesPresents = [...new Set(fiches.map((f) => f.data.regime))];
           data-categorie={fiche.data.categorie}
           data-regime={fiche.data.regime}
         >
-          <div class="meta">
+          <div class="fiche-meta">
+            <span class="fiche-cat">{CATEGORIES[fiche.data.categorie]}</span>
             <span class="badge">
               {LIBELLES_REGIME[fiche.data.regime]}{fiche.data.contextuel && ' ⚠'}
             </span>
-            <span class="aide">{CATEGORIES[fiche.data.categorie]}</span>
           </div>
           <h3>{fiche.data.titre}</h3>
           <p class="fiche-piege-apercu">⚠ {fiche.data.piege}</p>

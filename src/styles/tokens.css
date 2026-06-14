@@ -32,6 +32,7 @@
   --carte-ombre: 0 18px 44px -18px rgba(99, 102, 241, 0.22);
   --carte-rayon: 24px;
   --voile-violet: rgba(99, 102, 241, 0.07);
+  --grille-ligne: rgba(99, 102, 241, 0.05);
 
   /* Sémantique verdict — jamais violet (PRD §13) */
   --verdict-conforme: #16a34a;
