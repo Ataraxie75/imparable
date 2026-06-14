@@ -485,41 +485,48 @@
   border: 1px solid var(--carte-bord);
   border-radius: var(--carte-rayon);
   box-shadow: var(--carte-ombre);
-  padding: 54px 56px;
-  display: grid; grid-template-columns: 1.45fr 0.85fr; gap: 56px; align-items: center;
-  margin: 12px 0 52px;
+  padding: 32px 36px;
+  display: grid; grid-template-columns: 1.5fr 0.8fr; gap: 40px; align-items: center;
+  margin: 8px 0 44px;
 }
 .acces-platine::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
   background: var(--voltage-grad);
 }
-.acces-platine h2 { color: var(--encre); font-size: clamp(1.55rem, 2.9vw, 2.25rem); margin: 0 0 14px; }
-.acces-platine p { color: var(--encre-2); }
+.acces-platine h2 { color: var(--encre); font-size: clamp(1.3rem, 2.3vw, 1.7rem); margin: 0 0 10px; }
+.acces-platine p { color: var(--encre-2); font-size: 0.95rem; margin: 0; }
 .platine-surlabel {
-  font-family: var(--police-display); font-weight: 800; font-size: 0.72rem;
-  letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 14px;
+  font-family: var(--police-display); font-weight: 800; font-size: 0.7rem;
+  letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 10px;
   background: var(--voltage-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.platine-liste { list-style: none; padding: 0; margin: 24px 0 0; }
-.platine-liste li { position: relative; padding-left: 30px; margin-bottom: 13px; color: var(--encre-2); }
+.platine-liste { list-style: none; padding: 0; margin: 16px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+.platine-liste li { position: relative; padding-left: 26px; margin: 0; color: var(--encre-2); font-size: 0.9rem; }
 .platine-liste li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--voltage-2); font-weight: 800; }
 .platine-prix-carte {
   background: var(--champ-fond);
   border: 1px solid var(--carte-bord);
-  border-radius: var(--carte-rayon); padding: 32px 28px; text-align: center;
+  border-radius: var(--carte-rayon); padding: 24px 22px; text-align: center;
 }
-.platine-prix { font-family: var(--police-display); font-weight: 800; font-size: 3.2rem; line-height: 1; color: var(--encre); }
-.platine-prix small { font-size: 1.2rem; font-weight: 800; }
+.platine-prix { font-family: var(--police-display); font-weight: 800; font-size: 2.6rem; line-height: 1; color: var(--encre); }
+.platine-prix small { font-size: 1.05rem; font-weight: 800; }
 .bouton-or {
   display: inline-block; width: 100%; border: 0; cursor: pointer;
-  margin-top: 18px; padding: 15px 24px; border-radius: var(--rayon-bouton);
-  font-family: var(--police-display); font-weight: 800; font-size: 1rem;
+  margin-top: 14px; padding: 13px 22px; border-radius: var(--rayon-bouton);
+  font-family: var(--police-display); font-weight: 800; font-size: 0.96rem;
   background: var(--or-grad); color: var(--encre);
   box-shadow: 0 12px 26px -12px rgba(216, 180, 95, 0.6);
 }
 .bouton-or:hover { text-decoration: none; transform: translateY(-1px); }
-.platine-note { font-size: 0.82rem; color: var(--encre-3); margin: 16px 0 0; }
-@media (max-width: 820px) { .acces-platine { grid-template-columns: 1fr; padding: 34px 28px; gap: 32px; } }
+.platine-note { font-size: 0.8rem; color: var(--encre-3); margin: 12px 0 0; }
+.biblio-soustitre {
+  font-family: var(--police-display); font-weight: 800; font-size: 1.35rem;
+  text-align: center; margin: 8px 0 6px;
+}
+@media (max-width: 820px) {
+  .acces-platine { grid-template-columns: 1fr; padding: 28px 24px; gap: 24px; }
+  .platine-liste { grid-template-columns: 1fr; }
+}
 
 /* Cartes verrouillées (premium flouté) */
 .chip-libre {
