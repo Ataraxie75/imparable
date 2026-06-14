@@ -225,26 +225,30 @@ export default function Wizard() {
               />
               <p className="aide">La date prévue de la réunion, indiquée sur la convocation.</p>
             </div>
-            <div className="pleine-largeur">
-              <label className="etiquette" htmlFor="wiz-delai">Délai du règlement de copropriété (jours)</label>
-              <input
-                id="wiz-delai"
-                className="champ"
-                type="number"
-                min={DELAI_LEGAL_MIN}
-                max={DELAI_REGLEMENT_MAX}
-                value={etat.delaiReglement}
-                onChange={(e) => maj({ delaiReglement: Number(e.target.value) })}
-              />
-            </div>
-            <label className="case pleine-largeur">
-              <input
-                type="checkbox"
-                checked={etat.urgence}
-                onChange={(e) => maj({ urgence: e.target.checked })}
-              />
-              <span>Convocation d’urgence (« délai raisonnable », art. 9 al. 3 du décret de 1967)</span>
-            </label>
+            <details className="wizard-avance pleine-largeur">
+              <summary>Cas particulier (facultatif) — délai du règlement, urgence</summary>
+              <div style={{ marginTop: 14 }}>
+                <label className="etiquette" htmlFor="wiz-delai">Délai prévu par votre règlement de copropriété (jours)</label>
+                <input
+                  id="wiz-delai"
+                  className="champ"
+                  type="number"
+                  min={DELAI_LEGAL_MIN}
+                  max={DELAI_REGLEMENT_MAX}
+                  value={etat.delaiReglement}
+                  onChange={(e) => maj({ delaiReglement: Number(e.target.value) })}
+                />
+                <p className="aide">Laissez 21 si votre règlement ne prévoit pas de délai plus long — c'est le minimum légal.</p>
+                <label className="case" style={{ marginTop: 14 }}>
+                  <input
+                    type="checkbox"
+                    checked={etat.urgence}
+                    onChange={(e) => maj({ urgence: e.target.checked })}
+                  />
+                  <span>Convocation d’urgence (« délai raisonnable », art. 9 al. 3 du décret de 1967)</span>
+                </label>
+              </div>
+            </details>
           </div>
 
           <TriEtat
@@ -520,7 +524,7 @@ export default function Wizard() {
             disabled={etat.etape === 0 && !etapeAValide}
             onClick={() => maj({ etape: etat.etape + 1 })}
           >
-            {etat.etape === 4 ? 'Voir le verdict' : 'Continuer'}
+            {etat.etape === 4 ? 'Voir mon verdict →' : 'Continuer →'}
           </button>
         </div>
       )}
