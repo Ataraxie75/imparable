@@ -317,6 +317,10 @@
 }
 .bouton-copier { position: absolute; top: 14px; right: 14px; padding: 8px 14px; font-size: 0.85rem; }
 
+/* Cadre de la « preuve de valeur » (rapport d'exemple sur la page audit) */
+.preuve-rapport { background: var(--champ-fond); border-radius: var(--carte-rayon); padding: 26px; }
+@media (max-width: 600px) { .preuve-rapport { padding: 10px; } }
+
 .fiche-grille { display: grid; grid-template-columns: 1.6fr 1fr; gap: 32px; align-items: start; }
 @media (max-width: 880px) { .fiche-grille { grid-template-columns: 1fr; } }
 

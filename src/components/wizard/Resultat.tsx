@@ -127,7 +127,7 @@ export default function Resultat({ resultat, reponses, onRecommencer }: Props) {
               disabled={enCours}
               onClick={payer}
             >
-              {enCours ? 'Redirection vers le paiement…' : 'Obtenir l’audit complet + attestation — 29 €'}
+              {enCours ? 'Redirection vers le paiement…' : 'Obtenir l’audit complet + attestation — 14,99 €'}
             </button>
             {message && (
               <p className="aide" style={{ marginTop: 10 }}>{message}</p>

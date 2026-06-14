@@ -64,7 +64,7 @@ describe('SPEC-PDF — attestation', () => {
     const r = reponses('2026-06-02'); // dernier jour du délai : annulable
     const html = attestationFragmentHTML(r, computeAudit(r, TAXONOMIE), META);
     expect(html).toContain('Rapport de vérification');
-    expect(html).toContain('Points à reprendre');
+    expect(html).toContain('corrections prioritaires');
     expect(html).toContain('Action corrective');
     expect(html).toContain('2026-06-03'); // date de report dans l'action
   });

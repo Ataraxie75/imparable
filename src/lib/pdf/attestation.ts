@@ -4,14 +4,13 @@
  * Fonction pure : (réponses, résultat, méta) → HTML autoporté, rendu en PDF
  * par la fonction serverless du LOT 4 (et affiché en spécimen sur le site).
  * Global `conforme` → « Attestation de vérification de conformité » ;
- * sinon → « Rapport de vérification » : l'utilisateur paie le diagnostic
- * dans les deux cas.
+ * sinon → « Rapport de vérification ».
  *
- * Librairie pure (zéro import d'asset) : le CSS des tokens est fourni par
- * l'appelant (`?raw` côté Astro, lecture fichier côté serverless), si bien
- * que check-color-tokens reste la source unique du design.
+ * Mise en forme alignée sur la DA du site. Librairie pure (zéro import
+ * d'asset) : le CSS des tokens est fourni par l'appelant, et toutes les
+ * couleurs passent par var() — check-color-tokens reste la source unique.
  */
-import type { ReponsesAudit, ResultatAudit, ResultatItem } from '../moteur/types';
+import type { ReponsesAudit, ResultatAudit, ResultatItem, StatutItem } from '../moteur/types';
 
 /** conforme → attestation ; sinon → rapport (PRD §19, schéma §17). */
 export function typeDocument(resultat: ResultatAudit): 'attestation' | 'rapport' {
@@ -40,11 +39,20 @@ const LIBELLES_MODE: Record<string, string> = {
   lre: 'Lettre recommandée électronique (envoi)',
 };
 
-const LIBELLES_STATUT: Record<ResultatItem['statut'], string> = {
+const LIBELLES_STATUT: Record<StatutItem, string> = {
   conforme: 'Conforme',
   non_conforme: 'Non conforme',
   vigilance: 'Vigilance',
 };
+
+const RISQUE: Record<StatutItem, string> = {
+  conforme: 'Conforme · aucune réserve',
+  non_conforme: 'Risque élevé · décisions annulables',
+  vigilance: 'À sécuriser avant l’envoi',
+};
+
+/** Priorité d'affichage : les problèmes d'abord. */
+const ORDRE: Record<StatutItem, number> = { non_conforme: 0, vigilance: 1, conforme: 2 };
 
 function e(texte: string): string {
   return texte
@@ -54,147 +62,96 @@ function e(texte: string): string {
     .replaceAll('"', '&quot;');
 }
 
-/** Styles du document — consomme les variables de tokens.css. */
+/** Styles du document — premium, alignés DA, 100 % via var() (zéro hex). */
 export const ATTESTATION_CSS = `
 .attestation {
-  font-family: var(--police-texte);
-  color: var(--encre);
-  background: var(--carte);
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 40px 48px;
-  border: 1px solid var(--carte-bord);
-  border-radius: var(--carte-rayon);
-  position: relative;
-  overflow: hidden;
-  font-size: 13px;
-  line-height: 1.55;
+  font-family: var(--police-texte); color: var(--encre); background: var(--carte);
+  max-width: 820px; margin: 0 auto; padding: 44px 48px 40px;
+  border: 1px solid var(--carte-bord); border-radius: var(--carte-rayon);
+  box-shadow: var(--carte-ombre); position: relative; overflow: hidden;
+  font-size: 13.5px; line-height: 1.6;
 }
-.attestation h1 {
-  font-family: var(--police-display);
-  font-weight: var(--graisse-display);
-  font-size: 21px;
-  margin: 0 0 2px;
-}
-.attestation .marque {
-  font-family: var(--police-display);
-  font-weight: var(--graisse-display);
-  letter-spacing: 0.06em;
+.attestation::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
   background: var(--voltage-grad);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-size: 15px;
 }
-.attestation .entete-doc {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  border-bottom: 2px solid var(--carte-bord);
-  padding-bottom: 14px;
-  margin-bottom: 18px;
+.att-entete { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
+.att-marque {
+  font-family: var(--police-display); font-weight: 800; font-size: 17px; letter-spacing: 0.05em;
+  background: var(--voltage-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.attestation .numero { font-size: 12px; color: var(--encre-3); text-align: right; }
-.attestation .verdict-global {
-  display: inline-block;
-  border-radius: 999px;
-  padding: 5px 16px;
-  font-family: var(--police-display);
-  font-weight: var(--graisse-display);
-  font-size: 13px;
-  margin: 4px 0 14px;
+.att-meta { font-size: 11.5px; color: var(--encre-3); text-align: right; line-height: 1.5; }
+.att-surlabel {
+  font-family: var(--police-display); font-weight: 800; font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase; margin: 0 0 4px;
+  background: var(--voltage-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.attestation .verdict-global.g-conforme { color: var(--verdict-conforme); background: var(--verdict-conforme-fond); }
-.attestation .verdict-global.g-non_conforme { color: var(--verdict-annulable); background: var(--verdict-annulable-fond); }
-.attestation .verdict-global.g-vigilance { color: var(--verdict-vigilance); background: var(--verdict-vigilance-fond); }
-.attestation table { width: 100%; border-collapse: collapse; margin: 8px 0 18px; }
-.attestation th, .attestation td {
-  text-align: left;
-  padding: 5px 8px;
-  border-bottom: 1px solid var(--carte-bord);
-  vertical-align: top;
+.att-h1 { font-family: var(--police-display); font-weight: 800; font-size: 25px; margin: 0 0 20px; color: var(--encre); }
+
+.att-verdict { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; border-radius: 16px; padding: 16px 20px; margin-bottom: 22px; }
+.att-verdict.v-conforme { background: var(--verdict-conforme-fond); }
+.att-verdict.v-non_conforme { background: var(--verdict-annulable-fond); }
+.att-verdict.v-vigilance { background: var(--verdict-vigilance-fond); }
+.att-pastille { font-family: var(--police-display); font-weight: 800; font-size: 13px; padding: 6px 16px; border-radius: 999px; color: var(--encre-inverse); }
+.att-verdict.v-conforme .att-pastille { background: var(--verdict-conforme); }
+.att-verdict.v-non_conforme .att-pastille { background: var(--verdict-annulable); }
+.att-verdict.v-vigilance .att-pastille { background: var(--verdict-vigilance); }
+.att-risque { font-family: var(--police-display); font-weight: 800; font-size: 13px; }
+.att-verdict.v-conforme .att-risque { color: var(--verdict-conforme); }
+.att-verdict.v-non_conforme .att-risque { color: var(--verdict-annulable); }
+.att-verdict.v-vigilance .att-risque { color: var(--verdict-vigilance); }
+.att-compteurs { margin-left: auto; font-size: 12px; color: var(--encre-2); }
+
+.att-synthese { background: var(--champ-fond); border: 1px solid var(--carte-bord); border-radius: 14px; padding: 18px 22px; margin-bottom: 22px; }
+.att-synthese h2 { font-family: var(--police-display); font-weight: 800; font-size: 15px; margin: 0 0 12px; }
+.att-actions { margin: 0; padding: 0; list-style: none; counter-reset: a; }
+.att-actions li { counter-increment: a; position: relative; padding-left: 32px; margin-bottom: 10px; }
+.att-actions li:last-child { margin-bottom: 0; }
+.att-actions li::before {
+  content: counter(a); position: absolute; left: 0; top: -1px; width: 22px; height: 22px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--police-display); font-weight: 800; font-size: 11px;
+  color: var(--encre-inverse); background: var(--voltage-grad);
 }
-.attestation th {
-  font-family: var(--police-display);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--encre-3);
-}
-.attestation h2 {
-  font-family: var(--police-display);
-  font-weight: var(--graisse-display);
-  font-size: 14px;
-  margin: 18px 0 6px;
-}
-.attestation .item { padding: 6px 0 6px 12px; border-left: 3px solid var(--carte-bord); margin-bottom: 6px; }
-.attestation .item.s-conforme { border-left-color: var(--verdict-conforme); }
-.attestation .item.s-non_conforme { border-left-color: var(--verdict-annulable); }
-.attestation .item.s-vigilance { border-left-color: var(--verdict-vigilance); }
-.attestation .item .statut { font-weight: 700; }
-.attestation .item.s-conforme .statut { color: var(--verdict-conforme); }
-.attestation .item.s-non_conforme .statut { color: var(--verdict-annulable); }
-.attestation .item.s-vigilance .statut { color: var(--verdict-vigilance); }
-.attestation .item .ref { color: var(--encre-3); font-size: 11px; }
-.attestation .limite {
-  border: 1.5px solid var(--carte-bord);
-  border-radius: 12px;
-  padding: 12px 16px;
-  font-size: 11px;
-  color: var(--encre-2);
-  margin-top: 18px;
-}
-.attestation .pied-doc {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-top: 18px;
-  font-size: 11px;
-  color: var(--encre-3);
-}
-.attestation .qr {
-  width: 74px;
-  height: 74px;
-  border: 1.5px dashed var(--carte-bord);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  text-align: center;
-  color: var(--encre-3);
-  flex: none;
-}
-.attestation .filigrane {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  font-family: var(--police-display);
-  font-weight: var(--graisse-display);
-  font-size: 96px;
-  letter-spacing: 0.2em;
-  color: var(--voile-violet);
-  transform: rotate(-28deg);
-}
+
+.att-section { font-family: var(--police-display); font-weight: 800; font-size: 15px; margin: 26px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--carte-bord); }
+.att-table { width: 100%; border-collapse: collapse; }
+.att-table td { padding: 7px 8px; border-bottom: 1px solid var(--carte-bord); }
+.att-table tr:last-child td { border-bottom: 0; }
+.att-table td:first-child { color: var(--encre-3); }
+.att-table td:last-child { font-weight: 700; text-align: right; }
+
+.att-item { border: 1px solid var(--carte-bord); border-left: 4px solid var(--carte-bord); border-radius: 12px; padding: 13px 16px; margin-bottom: 10px; }
+.att-item.s-conforme { border-left-color: var(--verdict-conforme); }
+.att-item.s-non_conforme { border-left-color: var(--verdict-annulable); }
+.att-item.s-vigilance { border-left-color: var(--verdict-vigilance); }
+.att-item-tete { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.att-item-code { font-family: var(--police-display); font-weight: 800; font-size: 11px; color: var(--encre-3); }
+.att-item-titre { font-family: var(--police-display); font-weight: 700; font-size: 13.5px; flex: 1; }
+.att-item-statut { font-family: var(--police-display); font-weight: 800; font-size: 10.5px; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+.att-item.s-conforme .att-item-statut { color: var(--verdict-conforme); background: var(--verdict-conforme-fond); }
+.att-item.s-non_conforme .att-item-statut { color: var(--verdict-annulable); background: var(--verdict-annulable-fond); }
+.att-item.s-vigilance .att-item-statut { color: var(--verdict-vigilance); background: var(--verdict-vigilance-fond); }
+.att-item p { margin: 0 0 7px; }
+.att-action { background: var(--voile-violet); border-radius: 8px; padding: 8px 12px; font-size: 12.5px; margin-bottom: 7px; }
+.att-ref { color: var(--encre-3); font-size: 11px; }
+
+.att-limite { border: 1px solid var(--carte-bord); border-radius: 12px; padding: 12px 16px; font-size: 11.5px; color: var(--encre-2); margin-top: 24px; }
+.att-pied { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 18px; font-size: 11px; color: var(--encre-3); }
+.att-qr { width: 72px; height: 72px; border: 1.5px dashed var(--carte-bord); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 9px; text-align: center; color: var(--encre-3); flex: none; }
+.att-filigrane { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; font-family: var(--police-display); font-weight: 800; font-size: 92px; letter-spacing: 0.2em; color: var(--voile-violet); transform: rotate(-28deg); }
 `;
 
 /**
- * Fragment HTML du document (sans <html>) — embarqué tel quel sur la page
- * spécimen, et enveloppé par `attestationDocumentHTML` pour le rendu PDF.
+ * Fragment HTML du document (sans <html>) — embarqué tel quel sur le site,
+ * et enveloppé par `attestationDocumentHTML` pour le rendu PDF.
  */
 export function attestationFragmentHTML(
   reponses: ReponsesAudit,
   resultat: ResultatAudit,
   meta: MetaAttestation,
 ): string {
-  if (resultat.global === 'hors_perimetre') {
-    throw new Error('Aucune attestation ne peut être émise sur un cas hors périmètre (R7).');
-  }
-  if (resultat.delai.statut === 'hors_perimetre') {
+  if (resultat.global === 'hors_perimetre' || resultat.delai.statut === 'hors_perimetre') {
     throw new Error('Aucune attestation ne peut être émise sur un cas hors périmètre (R7).');
   }
 
@@ -204,53 +161,79 @@ export function attestationFragmentHTML(
       : 'Rapport de vérification';
 
   const delai = resultat.delai;
-  const corrections = resultat.items.filter((i) => i.statut !== 'conforme');
+  const nb = (s: StatutItem) => resultat.items.filter((i) => i.statut === s).length;
+  const corrections = resultat.items.filter((i) => i.statut === 'non_conforme');
+  const vigilances = resultat.items.filter((i) => i.statut === 'vigilance');
+  const itemsTries = [...resultat.items].sort((a, b) => ORDRE[a.statut] - ORDRE[b.statut]);
 
-  const lignesItems = resultat.items
+  // Synthèse en tête : les corrections prioritaires, sinon les vigilances, sinon le conforme.
+  let synthese: string;
+  if (corrections.length > 0) {
+    const actions = corrections
+      .map((i) => `<li><strong>${e(i.libelle)}.</strong> ${e(i.actionCorrective ?? i.explication)}</li>`)
+      .join('');
+    synthese = `<div class="att-synthese"><h2>Vos corrections prioritaires (${corrections.length})</h2><ol class="att-actions">${actions}</ol></div>`;
+  } else if (vigilances.length > 0) {
+    const items = vigilances
+      .map((i) => `<li><strong>${e(i.libelle)}.</strong> ${e(i.explication)}</li>`)
+      .join('');
+    synthese = `<div class="att-synthese"><h2>Points à faire vérifier (${vigilances.length})</h2><ol class="att-actions">${items}</ol></div>`;
+  } else {
+    synthese = `<div class="att-synthese"><h2>Aucune correction requise</h2><p style="margin:0;">Votre convocation est conforme sur les ${resultat.items.length} points contrôlés.</p></div>`;
+  }
+
+  const lignesItems = itemsTries
     .map(
       (item) => `
-      <div class="item s-${item.statut}">
-        <div><strong>${e(item.code)} — ${e(item.libelle)}</strong> · <span class="statut">${LIBELLES_STATUT[item.statut]}</span></div>
-        <div>${e(item.explication)}</div>
-        ${item.actionCorrective ? `<div><strong>Action corrective :</strong> ${e(item.actionCorrective)}</div>` : ''}
-        <div class="ref">${e(item.refLegale)}</div>
+      <div class="att-item s-${item.statut}">
+        <div class="att-item-tete">
+          <span class="att-item-code">${e(item.code)}</span>
+          <span class="att-item-titre">${e(item.libelle)}</span>
+          <span class="att-item-statut">${LIBELLES_STATUT[item.statut]}</span>
+        </div>
+        <p>${e(item.explication)}</p>
+        ${item.actionCorrective ? `<div class="att-action"><strong>Action corrective :</strong> ${e(item.actionCorrective)}</div>` : ''}
+        <div class="att-ref">${e(item.refLegale)}</div>
       </div>`,
     )
     .join('');
 
+  const verdictLabel =
+    resultat.global === 'conforme'
+      ? 'CONFORME'
+      : resultat.global === 'non_conforme'
+        ? 'NON CONFORME'
+        : 'VIGILANCES À LEVER';
+
   return `
 <div class="attestation">
-  ${meta.specimen ? '<div class="filigrane" aria-hidden="true">SPÉCIMEN</div>' : ''}
-  <div class="entete-doc">
-    <div>
-      ${
-        meta.logoCabinetUrl
-          ? `<img src="${e(meta.logoCabinetUrl)}" alt="Logo du cabinet" style="max-height:36px;" />`
-          : '<span class="marque">IMPARABLE</span>'
-      }
-      <h1>${titre}</h1>
-      <div>Convocation d'assemblée générale de copropriété</div>
-    </div>
-    <div class="numero">
+  ${meta.specimen ? '<div class="att-filigrane" aria-hidden="true">SPÉCIMEN</div>' : ''}
+  <div class="att-entete">
+    ${
+      meta.logoCabinetUrl
+        ? `<img src="${e(meta.logoCabinetUrl)}" alt="Logo du cabinet" style="max-height:36px;" />`
+        : '<span class="att-marque">IMPARABLE</span>'
+    }
+    <div class="att-meta">
       N° <strong>${e(meta.numero)}</strong><br />
       Émise le ${e(meta.emiseLe)}<br />
       Règles vérifiées au ${e(resultat.rulesVersion)}
     </div>
   </div>
 
-  <span class="verdict-global g-${resultat.global}">
-    ${resultat.global === 'conforme' ? 'CONFORME' : resultat.global === 'non_conforme' ? 'NON CONFORME' : 'VIGILANCES À LEVER'}
-  </span>
+  <p class="att-surlabel">${titre}</p>
+  <h1 class="att-h1">Convocation d'assemblée générale de copropriété</h1>
 
-  ${
-    corrections.length > 0
-      ? `<h2>Points à reprendre (${corrections.length})</h2>
-         <p>Chaque point ci-dessous comporte son explication et, le cas échéant, son action corrective datée.</p>`
-      : ''
-  }
+  <div class="att-verdict v-${resultat.global}">
+    <span class="att-pastille">${verdictLabel}</span>
+    <span class="att-risque">${RISQUE[resultat.global]}</span>
+    <span class="att-compteurs">${nb('conforme')} conformes · ${nb('non_conforme')} à corriger · ${nb('vigilance')} à vérifier</span>
+  </div>
 
-  <h2>Computation du délai de convocation</h2>
-  <table>
+  ${synthese}
+
+  <h2 class="att-section">Le calcul du délai de convocation</h2>
+  <table class="att-table">
     <tbody>
       <tr><td>Mode de notification</td><td>${e(LIBELLES_MODE[reponses.delai.mode] ?? reponses.delai.mode)}</td></tr>
       <tr><td>Date de notification</td><td>${e(reponses.delai.dateNotification)}</td></tr>
@@ -263,20 +246,20 @@ export function attestationFragmentHTML(
     </tbody>
   </table>
 
-  <h2>Points contrôlés (${resultat.items.length})</h2>
+  <h2 class="att-section">Les ${resultat.items.length} points contrôlés</h2>
   ${lignesItems}
 
-  <div class="limite">
+  <div class="att-limite">
     Ce document atteste d'une vérification formelle réalisée à la date indiquée, sur la base des
     déclarations fournies. Il ne constitue pas un conseil juridique.
   </div>
 
-  <div class="pied-doc">
+  <div class="att-pied">
     <div>
       Authenticité vérifiable à tout moment :<br />
       <strong>${e(meta.urlVerification)}</strong>
     </div>
-    <div class="qr">QR<br />/verifier</div>
+    <div class="att-qr">QR<br />/verifier</div>
   </div>
 </div>`;
 }
@@ -294,7 +277,7 @@ export function attestationDocumentHTML(
 <meta charset="utf-8" />
 <title>${e(meta.numero)}</title>
 <style>${tokensCss}</style>
-<style>body { margin: 0; padding: 24px; background: var(--carte); } ${ATTESTATION_CSS}</style>
+<style>body { margin: 0; padding: 24px; background: var(--fond-debut); } ${ATTESTATION_CSS}</style>
 </head>
 <body>${attestationFragmentHTML(reponses, resultat, meta)}</body>
 </html>`;

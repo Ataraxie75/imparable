@@ -1,19 +1,60 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Wizard from '../components/wizard/Wizard';
+import { computeAudit } from '../lib/moteur/audit';
+import { TAXONOMIE } from '../lib/moteur/taxonomie.generated';
+import { ATTESTATION_CSS, attestationFragmentHTML } from '../lib/pdf/attestation';
+import type { ReponsesAudit } from '../lib/moteur/types';
+
+// Preuve de valeur : un rapport généré par le VRAI moteur, sur un cas avec
+// défauts, pour montrer ce que le client obtient (synthèse, corrections, refs).
+const exemple: ReponsesAudit = {
+  delai: { mode: 'lrar', dateNotification: '2026-05-12', dateAG: '2026-06-02' },
+  modeAdmisPourTous: true,
+  mentions: { lieuDateHeure: true, ordreDuJourComplet: true, consultationPieces: false },
+  formulaireVoteJoint: true,
+  resolutions: [
+    { slug: 'budget-previsionnel', majoriteAnnoncee: 'art24', documentsJoints: [] },
+    { slug: 'designation-syndic', majoriteAnnoncee: 'art24', documentsJoints: ['projet-contrat-syndic'] },
+  ],
+  convocateur: { qualite: 'syndic', mandatEnCours: true },
+};
+const resultatExemple = computeAudit(exemple, TAXONOMIE);
+const rapportExemple = attestationFragmentHTML(exemple, resultatExemple, {
+  numero: 'IMP-2026-00042',
+  emiseLe: '14 juin 2026, 10:00 (heure de Paris)',
+  urlVerification: 'https://imparable.fr/verifier/IMP-2026-00042',
+  specimen: true,
+});
 ---
 
 <Layout
   titre="Audit de conformité de votre convocation d'AG"
   description="Vérifiez les causes de nullité de votre convocation d'assemblée générale de copropriété : délai, notification, mentions, documents joints, majorités, convocateur. Verdict point par point."
 >
+  <style is:global set:html={ATTESTATION_CSS}></style>
   <div class="conteneur section">
-    <h1 class="section-titre">Audit de votre convocation</h1>
+    <h1 class="section-titre titre-degrade">Audit de votre convocation</h1>
     <p class="section-sous-titre">
       Cinq blocs de contrôle, chacun adossé à son texte. Vos réponses restent dans votre
-      navigateur : aucun nom, aucune donnée de tiers n'est demandée. Reprenez où vous en étiez,
-      la saisie est conservée.
+      navigateur : aucun nom, aucune donnée de tiers n'est demandée.
     </p>
     <Wizard client:load />
+
+    <section class="section">
+      <h2 class="section-titre titre-degrade" style="font-size:clamp(1.6rem,3.5vw,2.2rem);">
+        Voici exactement ce que vous obtenez
+      </h2>
+      <p class="section-sous-titre">
+        Un rapport clair et signé : la synthèse de vos corrections prioritaires, le calcul du délai
+        à nu, puis chaque point avec son action et sa référence. Vérifiable en ligne par n'importe qui.
+      </p>
+      <div class="preuve-rapport">
+        <Fragment set:html={rapportExemple} />
+      </div>
+      <p style="text-align:center; margin-top:28px;">
+        <a class="bouton bouton-voltage" href="/specimen-attestation">Voir le document en grand</a>
+      </p>
+    </section>
   </div>
 </Layout>
