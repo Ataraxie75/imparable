@@ -102,13 +102,16 @@ a:hover { text-decoration: underline; }
 .champ {
   display: block;
   width: 100%;
-  border: 1.5px solid var(--carte-bord);
+  border: 1px solid var(--carte-bord);
   border-radius: var(--rayon-champ);
-  background: var(--carte);
+  background: var(--champ-fond);
   color: var(--encre);
   font: inherit;
-  padding: 11px 14px;
+  padding: 12px 14px;
+  transition: border-color 0.12s ease, background 0.12s ease;
 }
+
+.champ:hover { border-color: rgba(99, 102, 241, 0.35); }
 
 .champ:focus {
   outline: 2px solid var(--voltage-1);

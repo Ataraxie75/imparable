@@ -84,7 +84,10 @@
   align-items: start;
 }
 
-.hero h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1.05; }
+.hero h1 {
+  font-size: clamp(2rem, 4.2vw, 3.05rem); line-height: 1.12;
+  letter-spacing: -0.025em; text-wrap: balance;
+}
 
 .hero .surtitre {
   font-family: var(--police-display);
@@ -95,22 +98,22 @@
   color: var(--voltage-2);
 }
 
-.hero-points { list-style: none; padding: 0; margin: 24px 0 0; }
+.hero-points { list-style: none; padding: 0; margin: 28px 0 0; }
 .hero-points li {
-  padding-left: 26px;
+  padding-left: 28px;
   position: relative;
-  margin-bottom: 10px;
+  margin-bottom: 11px;
   color: var(--encre-2);
+  font-size: 0.98rem;
 }
 .hero-points li::before {
-  content: '';
+  content: '✓';
   position: absolute;
   left: 0;
-  top: 9px;
-  width: 12px;
-  height: 12px;
-  border-radius: 4px;
-  background: var(--voltage-grad);
+  top: 0;
+  color: var(--voltage-2);
+  font-weight: 800;
+  font-size: 0.95rem;
 }
 
 @media (max-width: 880px) {
@@ -144,7 +147,9 @@
 }
 
 /* ── Calculateur ── */
-.calculateur .ligne-champs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.carte.calculateur { padding: 30px; }
+.calculateur > h3 { font-size: 1.18rem; text-wrap: balance; margin-bottom: 6px; }
+.calculateur .ligne-champs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; margin-top: 4px; }
 .calculateur .pleine-largeur { grid-column: 1 / -1; }
 .calculateur .case { display: flex; gap: 10px; align-items: flex-start; font-size: 0.9rem; color: var(--encre-2); }
 .calculateur .case input { margin-top: 4px; }
@@ -276,18 +281,25 @@
 .fiche-carte:hover { transform: translateY(-3px); box-shadow: 0 24px 50px -22px var(--voltage-ombre); }
 .fiche-carte h3 { margin: 0; font-size: 1.08rem; }
 .fiche-meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+/* Chip glossy haut de gamme sur la catégorie (effet verre/satiné). */
 .fiche-cat {
-  font-family: var(--police-display); font-size: 0.72rem; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase; color: var(--encre-3);
-  white-space: nowrap;
+  display: inline-block;
+  font-family: var(--police-display); font-size: 0.64rem; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--encre-2);
+  padding: 5px 12px; border-radius: 999px; white-space: nowrap;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(99, 102, 241, 0.12));
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 1px 2px rgba(21, 22, 43, 0.06);
 }
 .fiche-carte .meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .fiche-piege-apercu { font-size: 0.88rem; color: var(--encre-3); }
 
 .modele-bloc {
-  background: var(--voile-violet);
-  border-radius: var(--rayon-champ);
-  padding: 20px;
+  background: var(--carte);
+  border: 1px solid var(--carte-bord);
+  border-radius: var(--carte-rayon);
+  box-shadow: var(--carte-ombre);
+  padding: 28px 30px;
   position: relative;
   font-size: 0.98rem;
 }

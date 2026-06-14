@@ -9,8 +9,8 @@
  */
 :root {
   /* Fond */
-  --fond-debut: #f3f2fd;
-  --fond-fin: #eef0fe;
+  --fond-debut: #f7f8fc;
+  --fond-fin: #f2f4fb;
 
   /* Voltage — indigo → violet (DA inspirée des maquettes app), chrome & CTA
      uniquement, jamais sur la sémantique verdict */
@@ -33,6 +33,7 @@
   --carte-rayon: 22px;
   --voile-violet: rgba(99, 102, 241, 0.055);
   --grille-ligne: rgba(21, 22, 43, 0.03);
+  --champ-fond: #f6f6fb;
 
   /* Sémantique verdict — jamais violet (PRD §13) */
   --verdict-conforme: #16a34a;
