@@ -40,22 +40,25 @@ const fiches = (await getCollection('resolutions', ({ data }) => data.published)
         questions, un verdict point par point.
       </p>
       <div class="grille-3">
-        <div class="carte">
-          <h3>1 — Répondez au questionnaire</h3>
+        <div class="carte etape-carte">
+          <div class="etape-num">1</div>
+          <h3>Répondez au questionnaire</h3>
           <p>
             Délai et mode de notification, mentions de la convocation, documents joints,
             majorités annoncées, qualité du convocateur. Aucune donnée de tiers demandée.
           </p>
         </div>
-        <div class="carte">
-          <h3>2 — Lisez le verdict</h3>
+        <div class="carte etape-carte">
+          <div class="etape-num">2</div>
+          <h3>Lisez le verdict</h3>
           <p>
             Chaque point est conforme, non conforme ou en vigilance — jamais de fausse
             certitude : tout cas ambigu est renvoyé à une vérification humaine.
           </p>
         </div>
-        <div class="carte">
-          <h3>3 — Repartez avec la preuve</h3>
+        <div class="carte etape-carte">
+          <div class="etape-num">3</div>
+          <h3>Repartez avec la preuve</h3>
           <p>
             Attestation PDF numérotée, horodatée, vérifiable en ligne, avec la version des
             règles appliquées et l'action corrective de chaque point à reprendre.

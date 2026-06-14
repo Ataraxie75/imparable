@@ -8,12 +8,6 @@
 import { useState } from 'react';
 import type { ReponsesAudit, ResultatAudit } from '../../lib/moteur/types';
 
-const LIBELLES_GLOBAL = {
-  conforme: { titre: 'Convocation conforme', classe: 'verdict-conforme' },
-  non_conforme: { titre: 'Convocation non conforme — AG annulable', classe: 'verdict-annulable' },
-  vigilance: { titre: 'Points de vigilance à faire vérifier', classe: 'verdict-vigilance' },
-} as const;
-
 interface Props {
   resultat: ResultatAudit;
   reponses: ReponsesAudit;
@@ -44,7 +38,18 @@ export default function Resultat({ resultat, reponses, onRecommencer }: Props) {
   }
 
   const compte = (statut: string) => resultat.items.filter((i) => i.statut === statut).length;
-  const global = LIBELLES_GLOBAL[resultat.global];
+
+  const RISQUE_LABEL = {
+    conforme: 'Conforme · aucune réserve',
+    non_conforme: 'Risque élevé · décisions annulables',
+    vigilance: 'À sécuriser avant l’envoi',
+  } as const;
+  const pastille = {
+    conforme: 'CONFORME',
+    non_conforme: 'NON CONFORME',
+    vigilance: 'VIGILANCES À LEVER',
+  } as const;
+  const problemes = resultat.items.filter((i) => i.statut !== 'conforme');
 
   async function payer() {
     setMessage(null);
@@ -74,11 +79,10 @@ export default function Resultat({ resultat, reponses, onRecommencer }: Props) {
 
   return (
     <div>
-      <div className={`verdict-carte ${global.classe}`}>
-        <div className="verdict-titre">{global.titre}</div>
-        <p className="verdict-detail" style={{ marginBottom: 0 }}>
-          {resultat.items.length} points contrôlés · règles vérifiées au {resultat.rulesVersion}.
-        </p>
+      <div className={`resultat-verdict v-${resultat.global}`}>
+        <span className="resultat-pastille">{pastille[resultat.global]}</span>
+        <span className="resultat-risque">{RISQUE_LABEL[resultat.global]}</span>
+        <span className="resultat-rules">{resultat.items.length} points · règles au {resultat.rulesVersion}</span>
       </div>
 
       <div className="compteurs">
@@ -86,6 +90,22 @@ export default function Resultat({ resultat, reponses, onRecommencer }: Props) {
         <span className="compteur verdict-annulable">{compte('non_conforme')} à corriger</span>
         <span className="compteur verdict-vigilance">{compte('vigilance')} vigilances</span>
       </div>
+
+      {problemes.length > 0 && (
+        <div className="resultat-synthese">
+          <p className="resultat-synthese-titre">Ce qui doit être réglé avant d'envoyer</p>
+          <ul className="resultat-pb-liste">
+            {problemes.map((i) => (
+              <li key={i.code} className={`pb-${i.statut}`}>{i.libelle}</li>
+            ))}
+          </ul>
+          <p className="aide" style={{ margin: '12px 0 0' }}>
+            Comment corriger chaque point, la référence légale et votre{' '}
+            {resultat.global === 'conforme' ? 'attestation' : 'rapport'} PDF&nbsp;: débloquez le
+            détail ci-dessous.
+          </p>
+        </div>
+      )}
 
       <div className="detail-floute">
         <div className="items-floutes" aria-hidden="true">

@@ -10,7 +10,7 @@
  * d'asset) : le CSS des tokens est fourni par l'appelant, et toutes les
  * couleurs passent par var() — check-color-tokens reste la source unique.
  */
-import type { ReponsesAudit, ResultatAudit, ResultatItem, StatutItem } from '../moteur/types';
+import type { ReponsesAudit, ResultatAudit, StatutItem } from '../moteur/types';
 
 /** conforme → attestation ; sinon → rapport (PRD §19, schéma §17). */
 export function typeDocument(resultat: ResultatAudit): 'attestation' | 'rapport' {

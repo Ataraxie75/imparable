@@ -242,6 +242,28 @@
   font-family: var(--police-display);
 }
 
+/* Bandeau verdict de la page résultat (E5) — aligné sur le rapport */
+.resultat-verdict { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; border-radius: 16px; padding: 15px 18px; margin-bottom: 14px; }
+.resultat-verdict.v-conforme { background: var(--verdict-conforme-fond); }
+.resultat-verdict.v-non_conforme { background: var(--verdict-annulable-fond); }
+.resultat-verdict.v-vigilance { background: var(--verdict-vigilance-fond); }
+.resultat-pastille { font-family: var(--police-display); font-weight: 800; font-size: 0.92rem; padding: 7px 18px; border-radius: 999px; color: var(--encre-inverse); }
+.resultat-verdict.v-conforme .resultat-pastille { background: var(--verdict-conforme); }
+.resultat-verdict.v-non_conforme .resultat-pastille { background: var(--verdict-annulable); }
+.resultat-verdict.v-vigilance .resultat-pastille { background: var(--verdict-vigilance); }
+.resultat-risque { font-family: var(--police-display); font-weight: 800; font-size: 0.95rem; }
+.resultat-verdict.v-conforme .resultat-risque { color: var(--verdict-conforme); }
+.resultat-verdict.v-non_conforme .resultat-risque { color: var(--verdict-annulable); }
+.resultat-verdict.v-vigilance .resultat-risque { color: var(--verdict-vigilance); }
+.resultat-rules { margin-left: auto; font-size: 0.82rem; color: var(--encre-3); }
+.resultat-synthese { background: var(--champ-fond); border: 1px solid var(--carte-bord); border-radius: var(--rayon-champ); padding: 16px 20px; margin-bottom: 16px; }
+.resultat-synthese-titre { font-family: var(--police-display); font-weight: 800; margin: 0 0 10px; }
+.resultat-pb-liste { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.resultat-pb-liste li { position: relative; padding-left: 22px; color: var(--encre-2); font-size: 0.95rem; }
+.resultat-pb-liste li::before { content: ''; position: absolute; left: 0; top: 7px; width: 9px; height: 9px; border-radius: 3px; }
+.resultat-pb-liste li.pb-non_conforme::before { background: var(--verdict-annulable); }
+.resultat-pb-liste li.pb-vigilance::before { background: var(--verdict-vigilance); }
+
 .detail-floute { position: relative; }
 .detail-floute .items-floutes { filter: blur(7px); pointer-events: none; user-select: none; }
 .paywall-voile {
@@ -320,6 +342,18 @@
 /* Cadre de la « preuve de valeur » (rapport d'exemple sur la page audit) */
 .preuve-rapport { background: var(--champ-fond); border-radius: var(--carte-rayon); padding: 26px; }
 @media (max-width: 600px) { .preuve-rapport { padding: 10px; } }
+
+/* Cartes « étapes » de la home — pastille numérotée en dégradé */
+.etape-carte { position: relative; overflow: hidden; }
+.etape-carte::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--voltage-grad);
+}
+.etape-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; border-radius: 12px; margin-bottom: 14px;
+  font-family: var(--police-display); font-weight: 800; font-size: 1.15rem;
+  color: var(--encre-inverse); background: var(--voltage-grad);
+}
 
 .fiche-grille { display: grid; grid-template-columns: 1.6fr 1fr; gap: 32px; align-items: start; }
 @media (max-width: 880px) { .fiche-grille { grid-template-columns: 1fr; } }
