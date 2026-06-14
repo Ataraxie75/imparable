@@ -2,7 +2,7 @@
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Calculateur from '../../components/Calculateur';
-import { LIBELLES_REGIME } from '../../lib/moteur/audit';
+import { LIBELLES_REGIME_COURT } from '../../lib/moteur/audit';
 
 export async function getStaticPaths() {
   const guides = await getCollection('guides', ({ data }) => data.published);
@@ -16,7 +16,6 @@ interface Props {
 const { guide } = Astro.props;
 const { Content, headings } = await guide.render();
 
-// Sommaire : les titres de niveau 2 du guide (PRD §20, maillage & lisibilité).
 const sommaire = headings.filter((h) => h.depth === 2);
 
 const fichesLiees = (
@@ -48,16 +47,28 @@ const schema = {
   <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
 
   <div class="conteneur section">
-    <nav class="aide" aria-label="Fil d'Ariane" style="margin-bottom: 16px;">
+    <nav class="aide" aria-label="Fil d'Ariane" style="margin-bottom: 18px;">
       <a href="/guides">Guides anti-annulation</a> · {guide.data.titre}
     </nav>
-    <h1>{guide.data.titre}</h1>
-    <p class="guide-chiffre" style="display:block; padding:18px 24px;">
-      <span class="guide-chiffre-txt">{guide.data.description}</span>
-    </p>
-    <p class="aide" style="margin-top:6px;">Règles vérifiées au {guide.data.verifieLe} · références à l'appui dans chaque section.</p>
 
-    <div class="fiche-grille" style="margin-top: 24px;">
+    <div class="guide-entete">
+      <h1>{guide.data.titre}</h1>
+      <div class="guide-souligne"></div>
+      <p class="guide-lead">{guide.data.description}</p>
+    </div>
+
+    {guide.data.statsCles.length > 0 && (
+      <div class="stats-cercles">
+        {guide.data.statsCles.map((s) => (
+          <div class="stat-cercle">
+            <div class="stat-cercle-disque"><span class="stat-cercle-chiffre">{s.chiffre}</span></div>
+            <div class="stat-cercle-label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <div class="fiche-grille" style="margin-top: 40px;">
       <article class="prose carte">
         {sommaire.length > 1 && (
           <div class="sommaire">
@@ -85,12 +96,16 @@ const schema = {
             <h3>Fiches résolution liées</h3>
             {fichesLiees.map((f) => (
               <a class="carte fiche-carte" style="margin-bottom:12px;" href={`/resolutions/${f.slug}/`}>
-                <span class="badge">{LIBELLES_REGIME[f.data.regime]}</span>
+                <div class="fiche-meta">
+                  <span class="fiche-cat">Résolution</span>
+                  <span class="badge">{LIBELLES_REGIME_COURT[f.data.regime]}{f.data.contextuel && ' ⚠'}</span>
+                </div>
                 <h3>{f.data.titre}</h3>
               </a>
             ))}
           </div>
         )}
+        <p class="aide" style="margin-top:18px;">Règles vérifiées au {guide.data.verifieLe}.</p>
       </aside>
     </div>
   </div>

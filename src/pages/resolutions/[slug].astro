@@ -2,7 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Calculateur from '../../components/Calculateur';
-import { LIBELLES_REGIME } from '../../lib/moteur/audit';
+import { LIBELLES_REGIME, LIBELLES_REGIME_COURT } from '../../lib/moteur/audit';
 import DOCUMENTS from '../../lib/moteur/documents.json';
 
 export async function getStaticPaths() {
@@ -140,7 +140,7 @@ const schema = {
             <h3>Fiches liées</h3>
             {liees.map((f) => (
               <a class="carte fiche-carte" style="margin-bottom:12px;" href={`/resolutions/${f.slug}/`}>
-                <span class="badge">{LIBELLES_REGIME[f.data.regime]}</span>
+                <span class="badge">{LIBELLES_REGIME_COURT[f.data.regime]}</span>
                 <h3>{f.data.titre}</h3>
               </a>
             ))}

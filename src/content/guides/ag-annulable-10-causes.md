@@ -3,6 +3,11 @@ titre: "AG annulable : les 10 causes de nullité d'une assemblée générale de 
 description: "Délai de convocation, ordre du jour, documents manquants, mauvaise majorité, syndic sans mandat : le panorama des causes d'annulation d'une AG de copropriété, avec leurs textes."
 verifieLe: "2026-06-13"
 fichesLiees: ["designation-syndic", "travaux-amelioration", "budget-previsionnel"]
+statsCles:
+  - chiffre: "10"
+    label: "causes de nullité passées au crible"
+  - chiffre: "2 mois"
+    label: "le délai pour agir (art. 42)"
 published: true
 ---
 L'article 42 de la loi du 10 juillet 1965 ouvre aux copropriétaires opposants ou défaillants **deux mois** à compter de la notification du procès-verbal pour contester les décisions. Voici les causes qui reviennent dans les prétoires, regroupées comme dans notre grille d'audit.

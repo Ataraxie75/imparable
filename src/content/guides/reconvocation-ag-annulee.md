@@ -3,6 +3,11 @@ titre: "AG annulée ou délai raté : comment reconvoquer proprement (et ce que 
 description: "Reconvocation d'une assemblée générale de copropriété après annulation ou erreur de délai : nouvelle convocation complète, coûts réels, responsabilité du syndic."
 verifieLe: "2026-06-13"
 fichesLiees: ["designation-syndic", "budget-previsionnel"]
+statsCles:
+  - chiffre: "Milliers"
+    label: "d'euros : le coût d'une AG à refaire"
+  - chiffre: "0"
+    label: "rattrapage : une convocation viciée se refait à zéro"
 published: true
 ---
 Le délai est raté, un document obligatoire manque, ou le juge a annulé l'assemblée : il faut reconvoquer. Il n'existe pas de « rattrapage » d'une convocation irrégulière — seulement une nouvelle convocation, complète, qui repart de zéro.

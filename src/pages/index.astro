@@ -2,30 +2,10 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Calculateur from '../components/Calculateur';
-import { RULES_VERSION, LIBELLES_REGIME } from '../lib/moteur/audit';
+import { RULES_VERSION, LIBELLES_REGIME_COURT } from '../lib/moteur/audit';
 
 const fiches = (await getCollection('resolutions', ({ data }) => data.published)).slice(0, 3);
 
-const tarifs = [
-  {
-    nom: 'Verdict',
-    prix: '0 €',
-    detail: 'Calculateur de délai illimité, sans inscription. Le verdict ne se monnaye pas.',
-  },
-  {
-    nom: 'Bibliothèque',
-    prix: '0 €',
-    detail: 'Toutes les fiches résolution, intégralement : modèle, majorité, piège, références.',
-  },
-  {
-    nom: 'Audit + Attestation',
-    prix: '29 €',
-    suffixe: '/ AG',
-    detail:
-      'Audit des 5 blocs de causes de nullité + attestation PDF numérotée, vérifiable en ligne.',
-    vedette: true,
-  },
-];
 ---
 
 <Layout
@@ -98,7 +78,7 @@ const tarifs = [
           <a class="carte fiche-carte" href={`/resolutions/${fiche.slug}/`}>
             <div class="fiche-meta">
               <span class="fiche-cat">Résolution</span>
-              <span class="badge">{LIBELLES_REGIME[fiche.data.regime]}{fiche.data.contextuel && ' ⚠'}</span>
+              <span class="badge">{LIBELLES_REGIME_COURT[fiche.data.regime]}{fiche.data.contextuel && ' ⚠'}</span>
             </div>
             <h3>{fiche.data.titre}</h3>
             <p class="fiche-piege-apercu">⚠ {fiche.data.piege}</p>
@@ -115,21 +95,37 @@ const tarifs = [
       <p class="section-sous-titre">
         Le verdict et la Bibliothèque sont gratuits. Le payant, c'est la preuve.
       </p>
-      <div class="grille-3">
-        {tarifs.map((t) => (
-          <div class={`carte ${t.vedette ? 'carte-vedette' : ''}`}>
-            {t.vedette && <span class="badge">Le produit</span>}
-            <h3>{t.nom}</h3>
-            <p class="tarif-prix">{t.prix}{t.suffixe && <small> {t.suffixe}</small>}</p>
-            <p style="font-size:0.92rem;">{t.detail}</p>
+      <div class="tarifs-grille">
+        <div>
+          <div class="carte tarif-gratuit">
+            <h3>Verdict &amp; Bibliothèque — <span class="titre-accent">0 €</span></h3>
+            <ul class="prix-liste">
+              <li>Calculateur de délai illimité, sans inscription</li>
+              <li>33 fiches résolution, intégralement</li>
+              <li>11 guides anti-annulation</li>
+            </ul>
           </div>
-        ))}
+          <p class="ancrage" style="text-align:left; margin-top:24px;">
+            Une AG annulée, c'est une reconvocation en recommandé pour tout l'immeuble, une nouvelle
+            séance et une responsabilité engagée&nbsp;: plusieurs milliers d'euros. La vérification
+            en coûte 29. <a href="/specimen-attestation">Voir un spécimen d'attestation</a>.
+          </p>
+        </div>
+
+        <div class="prix-carte">
+          <div class="prix-acces"><span class="prix-point"></span> Accès immédiat</div>
+          <div class="prix-montant">29<span class="prix-eur">€</span></div>
+          <div class="prix-sous">Par AG vérifiée · sans abonnement</div>
+          <ul class="prix-liste">
+            <li>Audit complet des 5 blocs de nullité</li>
+            <li>Attestation PDF numérotée</li>
+            <li>Page de vérification d'authenticité</li>
+            <li>Action corrective pour chaque point</li>
+          </ul>
+          <a class="bouton bouton-voltage" href="/audit" style="width:100%;">Vérifier mon AG →</a>
+          <div class="prix-stripe">Paiement sécurisé via Stripe</div>
+        </div>
       </div>
-      <p class="ancrage">
-        Une AG annulée, c'est une reconvocation en recommandé pour tout l'immeuble, une nouvelle
-        séance et une responsabilité engagée&nbsp;: plusieurs milliers d'euros. La vérification
-        en coûte 29. <a href="/specimen-attestation">Voir un spécimen d'attestation</a>.
-      </p>
     </section>
 
     <section class="section">

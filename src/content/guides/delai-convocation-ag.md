@@ -3,6 +3,11 @@ titre: "Délai de convocation d'une AG de copropriété : la règle des 21 jours
 description: "Comment se calcule le délai de 21 jours de convocation d'une assemblée générale de copropriété : point de départ, dernier jour, première date légale d'AG, pièges du décompte."
 verifieLe: "2026-06-13"
 fichesLiees: ["designation-syndic", "budget-previsionnel", "approbation-comptes"]
+statsCles:
+  - chiffre: "21 jours"
+    label: "le délai minimum, sinon l'AG est annulable"
+  - chiffre: "2 mois"
+    label: "pour contester après la notification du PV"
 published: true
 ---
 La convocation doit être notifiée **au moins vingt et un jours avant la date de la réunion**, sauf délai supérieur prévu par le règlement de copropriété (art. 9 du décret n°67-223 du 17 mars 1967). Derrière cette phrase simple, trois pièges font annuler des assemblées entières.

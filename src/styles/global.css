@@ -140,6 +140,7 @@ a:hover { text-decoration: underline; }
   font-family: var(--police-display);
   background: var(--voile-violet);
   color: var(--voltage-2);
+  white-space: nowrap;
 }
 
 /* Sémantique verdict — hors charte violette, toujours */

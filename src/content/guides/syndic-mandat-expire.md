@@ -3,6 +3,11 @@ titre: "Syndic au mandat expiré : qui peut convoquer l'AG ?"
 description: "Un syndic dont le mandat est expiré ne peut plus convoquer l'assemblée générale : conséquences, solutions de l'article 8 du décret de 1967, syndic de fait et administrateur provisoire."
 verifieLe: "2026-06-13"
 fichesLiees: ["designation-syndic", "revocation-syndic", "election-conseil-syndical"]
+statsCles:
+  - chiffre: "Envoi"
+    label: "le mandat doit être valide à la date d'envoi"
+  - chiffre: "art. 7-8"
+    label: "qui peut convoquer à défaut de syndic"
 published: true
 ---
 Le mandat de syndic est d'une durée déterminée (trois ans maximum, un an dans certains cas) et **ne se proroge pas tacitement**. Au lendemain de son terme, le syndic perd tous ses pouvoirs — dont celui de convoquer l'assemblée générale (art. 7 du décret du 17 mars 1967).

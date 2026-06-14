@@ -33,6 +33,14 @@ export const LIBELLES_REGIME: Record<Regime, string> = {
   unanimite: 'Unanimité',
 };
 
+/** Forme courte pour les badges de carte (tient sur une ligne). */
+export const LIBELLES_REGIME_COURT: Record<Regime, string> = {
+  art24: 'Art. 24',
+  art25: 'Art. 25',
+  art26: 'Art. 26',
+  unanimite: 'Unanimité',
+};
+
 const REF_LOI_1965 = 'loi n°65-557 du 10 juillet 1965';
 const REF_DECRET_1967 = 'décret n°67-223 du 17 mars 1967';
 

@@ -18,21 +18,21 @@
   --voltage-2: #6d5cf6;
   --voltage-3: #8b5cf6;
   --voltage-grad: linear-gradient(100deg, var(--voltage-1), var(--voltage-2) 50%, var(--voltage-3));
-  --voltage-ombre: rgba(99, 102, 241, 0.30);
+  --voltage-ombre: rgba(99, 102, 241, 0.22);
 
-  /* Encres */
-  --encre: #231a35;
-  --encre-2: #4c4361;
-  --encre-3: #756a8c;
+  /* Encres — navy/ardoise neutres (l'indigo reste un accent, pas une teinte de fond) */
+  --encre: #15162b;
+  --encre-2: #3f4358;
+  --encre-3: #6a6e84;
   --encre-inverse: #ffffff;
 
   /* Surfaces */
   --carte: #ffffff;
-  --carte-bord: rgba(99, 102, 241, 0.13);
-  --carte-ombre: 0 18px 44px -18px rgba(99, 102, 241, 0.22);
-  --carte-rayon: 24px;
-  --voile-violet: rgba(99, 102, 241, 0.07);
-  --grille-ligne: rgba(99, 102, 241, 0.05);
+  --carte-bord: rgba(21, 22, 43, 0.08);
+  --carte-ombre: 0 16px 40px -22px rgba(21, 22, 43, 0.14);
+  --carte-rayon: 22px;
+  --voile-violet: rgba(99, 102, 241, 0.055);
+  --grille-ligne: rgba(21, 22, 43, 0.03);
 
   /* Sémantique verdict — jamais violet (PRD §13) */
   --verdict-conforme: #16a34a;

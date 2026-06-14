@@ -3,6 +3,11 @@ titre: "Majorités en AG de copropriété : articles 24, 25, 26 et unanimité, m
 description: "Comment se comptent les quatre majorités d'assemblée générale de copropriété (art. 24, 25, 26, unanimité), la passerelle de l'article 25-1, et l'erreur de régime qui rend la décision annulable."
 verifieLe: "2026-06-13"
 fichesLiees: ["travaux-entretien", "travaux-amelioration", "modification-reglement-jouissance", "modification-repartition-charges"]
+statsCles:
+  - chiffre: "4"
+    label: "régimes de majorité à ne pas confondre"
+  - chiffre: "25-1"
+    label: "la passerelle qui sauve un vote"
 published: true
 ---
 Chaque résolution d'assemblée générale relève d'un régime de majorité fixé par la loi du 10 juillet 1965. Voter à la mauvaise majorité rend la décision annulable (art. 42) — dans les deux sens : une majorité trop faible invalide, une majorité trop forte fait échouer des projets adoptables.

@@ -270,7 +270,7 @@
 }
 /* Liseré dégradé en haut de carte (signature DA app). */
 .fiche-carte::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
   background: var(--voltage-grad);
 }
 .fiche-carte:hover { transform: translateY(-3px); box-shadow: 0 24px 50px -22px var(--voltage-ombre); }
@@ -279,6 +279,7 @@
 .fiche-cat {
   font-family: var(--police-display); font-size: 0.72rem; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase; color: var(--encre-3);
+  white-space: nowrap;
 }
 .fiche-carte .meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .fiche-piege-apercu { font-size: 0.88rem; color: var(--encre-3); }
@@ -313,7 +314,7 @@
 .stat-chiffre {
   font-family: var(--police-display);
   font-weight: var(--graisse-display);
-  font-size: 2.1rem;
+  font-size: 1.8rem;
   line-height: 1;
   background: var(--voltage-grad);
   -webkit-background-clip: text;
@@ -389,8 +390,12 @@
 .prose { font-size: 1.02rem; line-height: 1.72; }
 .prose > p:first-of-type { font-size: 1.12rem; color: var(--encre); }
 .prose h2 {
-  font-size: 1.35rem; margin: 1.7em 0 0.5em; padding-left: 14px;
-  border-left: 4px solid var(--voltage-2); scroll-margin-top: 90px;
+  font-size: 1.4rem; margin: 1.9em 0 0.7em; scroll-margin-top: 90px;
+}
+/* Filet d'accent court sous les titres (éditorial premium). */
+.prose h2::after {
+  content: ''; display: block; width: 52px; height: 3px; margin-top: 12px;
+  border-radius: 2px; background: var(--voltage-grad);
 }
 .prose h3 { font-size: 1.1rem; margin-top: 1.4em; }
 .prose ul { list-style: none; padding-left: 0; }
@@ -408,3 +413,49 @@
   border-left: 4px solid var(--voltage-2); color: var(--encre-2);
 }
 .prose blockquote p { margin: 0; }
+
+/* ── Guides premium (réf. éditoriale) ── */
+.guide-entete { max-width: 780px; }
+.guide-entete h1 { margin-bottom: 16px; }
+.guide-souligne {
+  width: 72px; height: 4px; border-radius: 2px;
+  background: var(--voltage-grad); margin: 0 0 20px;
+}
+.guide-lead { font-size: 1.18rem; color: var(--encre-2); line-height: 1.62; margin: 0; }
+
+.stats-cercles { display: flex; flex-wrap: wrap; gap: 26px; margin: 30px 0 4px; }
+.stat-cercle { display: flex; flex-direction: column; align-items: center; text-align: center; width: 116px; }
+.stat-cercle-disque {
+  width: 98px; height: 98px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--carte); border: 1px solid var(--carte-bord);
+  box-shadow: var(--carte-ombre);
+}
+.stat-cercle-chiffre {
+  font-family: var(--police-display); font-weight: 800; font-size: 1.08rem; line-height: 1.08;
+  background: var(--voltage-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+  padding: 0 8px; word-break: break-word;
+}
+.stat-cercle-label { font-size: 0.78rem; color: var(--encre-3); margin-top: 10px; line-height: 1.38; }
+
+/* ── Carte de prix (signature DA) ── */
+.tarifs-grille { display: grid; grid-template-columns: 1fr 380px; gap: 44px; align-items: start; }
+@media (max-width: 880px) { .tarifs-grille { grid-template-columns: 1fr; } }
+.prix-carte {
+  background: var(--carte); border: 1px solid var(--carte-bord);
+  border-radius: var(--carte-rayon); box-shadow: var(--carte-ombre); padding: 32px;
+}
+.prix-acces {
+  display: flex; align-items: center; gap: 9px;
+  font-family: var(--police-display); font-weight: 700; font-size: 0.76rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--encre-3);
+}
+.prix-point { width: 8px; height: 8px; border-radius: 50%; background: var(--verdict-vigilance); }
+.prix-montant { font-family: var(--police-display); font-weight: 800; font-size: 3.4rem; line-height: 1; margin: 12px 0 2px; color: var(--encre); }
+.prix-eur { font-size: 1.3rem; font-weight: 800; vertical-align: super; margin-left: 3px; }
+.prix-sous { color: var(--encre-3); font-size: 0.95rem; margin: 0 0 20px; }
+.prix-liste { list-style: none; padding: 0; margin: 0 0 22px; }
+.prix-liste li { position: relative; padding-left: 28px; margin-bottom: 11px; color: var(--encre-2); font-size: 0.96rem; }
+.prix-liste li::before { content: '✓'; position: absolute; left: 0; top: -1px; color: var(--verdict-conforme); font-weight: 800; }
+.prix-stripe { text-align: center; font-size: 0.82rem; color: var(--encre-3); margin-top: 14px; }
+.tarif-gratuit h3 { margin-top: 0; }

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { LIBELLES_REGIME } from '../../lib/moteur/audit';
+import { LIBELLES_REGIME, LIBELLES_REGIME_COURT } from '../../lib/moteur/audit';
 
 const fiches = (await getCollection('resolutions', ({ data }) => data.published)).sort((a, b) =>
   a.data.titre.localeCompare(b.data.titre, 'fr'),
@@ -57,7 +57,7 @@ const regimesPresents = [...new Set(fiches.map((f) => f.data.regime))];
           <div class="fiche-meta">
             <span class="fiche-cat">{CATEGORIES[fiche.data.categorie]}</span>
             <span class="badge">
-              {LIBELLES_REGIME[fiche.data.regime]}{fiche.data.contextuel && ' ⚠'}
+              {LIBELLES_REGIME_COURT[fiche.data.regime]}{fiche.data.contextuel && ' ⚠'}
             </span>
           </div>
           <h3>{fiche.data.titre}</h3>

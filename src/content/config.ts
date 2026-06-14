@@ -44,6 +44,10 @@ const guides = defineCollection({
     verifieLe: z.string().regex(DATE_ISO),
     /** Slugs de fiches résolution liées (maillage interne, PRD §20). */
     fichesLiees: z.array(z.string()).default([]),
+    /** Cercles de chiffres-clés en tête de guide (DA éditoriale premium). */
+    statsCles: z
+      .array(z.object({ chiffre: z.string(), label: z.string() }))
+      .default([]),
     published: z.boolean(),
   }),
 });

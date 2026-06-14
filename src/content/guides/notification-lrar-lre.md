@@ -3,6 +3,11 @@ titre: "LRAR, remise en main propre, LRE : comment notifier une convocation d'AG
 description: "Les trois modes de notification admis pour convoquer une assemblée générale de copropriété, leur point de départ du délai de 21 jours, et le piège de la lettre recommandée électronique."
 verifieLe: "2026-06-13"
 fichesLiees: ["designation-syndic"]
+statsCles:
+  - chiffre: "3"
+    label: "modes de notification admis, pas un de plus"
+  - chiffre: "0"
+    label: "courrier simple ou e-mail toléré"
 published: true
 ---
 L'article 64 du décret du 17 mars 1967 n'admet que trois modes de notification pour la convocation d'assemblée générale. Chacun a son propre point de départ du délai — et c'est là que se joue la conformité.
