@@ -339,9 +339,14 @@
 }
 .bouton-copier { position: absolute; top: 14px; right: 14px; padding: 8px 14px; font-size: 0.85rem; }
 
-/* Cadre de la « preuve de valeur » (rapport d'exemple sur la page audit) */
-.preuve-rapport { background: var(--champ-fond); border-radius: var(--carte-rayon); padding: 26px; }
-@media (max-width: 600px) { .preuve-rapport { padding: 10px; } }
+/* Aperçu compact du rapport en haut de la page audit (fondu vers le bas) */
+.apercu-rapport { position: relative; max-height: 380px; overflow: hidden; }
+.apercu-rapport::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 150px;
+  background: linear-gradient(transparent, var(--fond-fin));
+  pointer-events: none;
+}
+.audit-questions { margin-top: 52px; }
 
 /* Cartes « étapes » de la home — pastille numérotée en dégradé */
 .etape-carte { position: relative; overflow: hidden; }

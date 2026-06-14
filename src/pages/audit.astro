@@ -6,8 +6,8 @@ import { TAXONOMIE } from '../lib/moteur/taxonomie.generated';
 import { ATTESTATION_CSS, attestationFragmentHTML } from '../lib/pdf/attestation';
 import type { ReponsesAudit } from '../lib/moteur/types';
 
-// Preuve de valeur : un rapport généré par le VRAI moteur, sur un cas avec
-// défauts, pour montrer ce que le client obtient (synthèse, corrections, refs).
+// Aperçu généré par le VRAI moteur, sur un cas avec défauts : preuve de
+// valeur affichée en haut de page (en-tête + verdict + corrections).
 const exemple: ReponsesAudit = {
   delai: { mode: 'lrar', dateNotification: '2026-05-12', dateAG: '2026-06-02' },
   modeAdmisPourTous: true,
@@ -29,32 +29,32 @@ const rapportExemple = attestationFragmentHTML(exemple, resultatExemple, {
 ---
 
 <Layout
-  titre="Audit de conformité de votre convocation d'AG"
-  description="Vérifiez les causes de nullité de votre convocation d'assemblée générale de copropriété : délai, notification, mentions, documents joints, majorités, convocateur. Verdict point par point."
+  titre="Vérifier votre convocation d'AG — audit gratuit"
+  description="Vérifiez les causes de nullité de votre convocation d'assemblée générale de copropriété : délai, notification, mentions, documents joints, majorités, convocateur. Verdict gratuit, rapport à 14,99 €."
 >
   <style is:global set:html={ATTESTATION_CSS}></style>
   <div class="conteneur section">
-    <h1 class="section-titre titre-degrade">Audit de votre convocation</h1>
+    <h1 class="section-titre titre-degrade">Vérifiez votre convocation</h1>
     <p class="section-sous-titre">
-      Cinq blocs de contrôle, chacun adossé à son texte. Vos réponses restent dans votre
-      navigateur : aucun nom, aucune donnée de tiers n'est demandée.
+      5 questions, 3 minutes, verdict gratuit. Voici le rapport que vous obtenez :
     </p>
-    <Wizard client:load />
 
-    <section class="section">
-      <h2 class="section-titre titre-degrade" style="font-size:clamp(1.6rem,3.5vw,2.2rem);">
-        Voici exactement ce que vous obtenez
+    <div class="apercu-rapport">
+      <Fragment set:html={rapportExemple} />
+    </div>
+    <p style="text-align:center; margin-top:14px;">
+      <a class="bouton bouton-secondaire" href="/specimen-attestation">Voir l'exemple complet</a>
+    </p>
+
+    <div class="audit-questions">
+      <h2 class="section-titre titre-degrade" style="font-size:clamp(1.5rem,3vw,2rem);">
+        Répondez à ces questions
       </h2>
       <p class="section-sous-titre">
-        Un rapport clair et signé : la synthèse de vos corrections prioritaires, le calcul du délai
-        à nu, puis chaque point avec son action et sa référence. Vérifiable en ligne par n'importe qui.
+        Aucun nom, aucune donnée de tiers : seulement des dates et des cases à cocher. Vos réponses
+        restent dans votre navigateur et la saisie est conservée.
       </p>
-      <div class="preuve-rapport">
-        <Fragment set:html={rapportExemple} />
-      </div>
-      <p style="text-align:center; margin-top:28px;">
-        <a class="bouton bouton-voltage" href="/specimen-attestation">Voir le document en grand</a>
-      </p>
-    </section>
+      <Wizard client:load />
+    </div>
   </div>
 </Layout>
