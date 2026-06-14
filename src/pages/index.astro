@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Calculateur from '../components/Calculateur';
-import { RULES_VERSION, LIBELLES_REGIME_COURT } from '../lib/moteur/audit';
+import { LIBELLES_REGIME_COURT } from '../lib/moteur/audit';
 
 const fiches = (await getCollection('resolutions', ({ data }) => data.published)).slice(0, 3);
 
@@ -125,18 +125,6 @@ const fiches = (await getCollection('resolutions', ({ data }) => data.published)
           <a class="bouton bouton-voltage" href="/audit" style="width:100%;">Vérifier mon AG →</a>
           <div class="prix-stripe">Paiement sécurisé via Stripe</div>
         </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="carte" style="text-align:center;">
-        <h2>Zéro IA, zéro approximation</h2>
-        <p style="max-width:640px; margin:0 auto 1em;">
-          Le verdict est produit par un moteur déterministe : les mêmes entrées donnent toujours
-          la même sortie, et chaque règle est publiée avec le texte qui la fonde. Règles
-          vérifiées au {RULES_VERSION}.
-        </p>
-        <a class="bouton bouton-secondaire" href="/methodologie">Lire la méthodologie et les sources</a>
       </div>
     </section>
   </div>
