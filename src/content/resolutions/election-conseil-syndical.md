@@ -8,6 +8,7 @@ verifieLe: "2026-06-13"
 documentsExiges: []
 variables: ["NOMS_CANDIDATS", "DUREE_MANDAT"]
 piege: "Si la majorité de l'article 25 n'est pas atteinte mais que le projet recueille au moins un tiers des voix, un second vote immédiat à la majorité de l'article 24 est possible (art. 25-1) — encore faut-il le constater et le voter en séance."
+gratuite: true
 published: true
 ---
 ## Modèle de résolution

@@ -11,6 +11,7 @@ documentsExiges:
   - "annexes-comptables"
 variables: ["EXERCICE", "DATE_CLOTURE"]
 piege: "Approuver les comptes ne vaut pas quitus : ce sont deux résolutions distinctes, votées séparément."
+gratuite: true
 published: true
 ---
 ## Modèle de résolution

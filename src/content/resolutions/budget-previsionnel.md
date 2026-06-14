@@ -9,6 +9,7 @@ documentsExiges:
   - "budget-previsionnel-detaille"
 variables: ["EXERCICE_BUDGETAIRE", "MONTANT"]
 piege: "Le budget doit être voté avant le début de l'exercice qu'il couvre — au plus tard dans les six mois suivant le dernier jour de l'exercice comptable précédent."
+gratuite: true
 published: true
 ---
 ## Modèle de résolution

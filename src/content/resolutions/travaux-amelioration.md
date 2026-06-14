@@ -11,6 +11,7 @@ documentsExiges:
 variables: ["NATURE_TRAVAUX", "ENTREPRISE", "MONTANT"]
 piege: "Avant la loi ELAN, l'amélioration relevait de l'article 26 : les modèles antérieurs à 2019 qui annoncent une double majorité sont obsolètes — et inversement, certains cas restent au 26."
 contextuel: true
+gratuite: true
 published: true
 ---
 ## Modèle de résolution

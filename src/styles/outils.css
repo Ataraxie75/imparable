@@ -475,3 +475,86 @@
 .prix-liste li::before { content: '✓'; position: absolute; left: 0; top: -1px; color: var(--verdict-conforme); font-weight: 800; }
 .prix-stripe { text-align: center; font-size: 0.82rem; color: var(--encre-3); margin-top: 14px; }
 .tarif-gratuit h3 { margin-top: 0; }
+
+/* ── Bibliothèque premium ── */
+/* Carte de vente « platine » — claire, aérée, accents or & indigo */
+.acces-platine {
+  position: relative; overflow: hidden;
+  background: var(--carte);
+  color: var(--encre);
+  border: 1px solid var(--carte-bord);
+  border-radius: var(--carte-rayon);
+  box-shadow: var(--carte-ombre);
+  padding: 54px 56px;
+  display: grid; grid-template-columns: 1.45fr 0.85fr; gap: 56px; align-items: center;
+  margin: 12px 0 52px;
+}
+.acces-platine::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--voltage-grad);
+}
+.acces-platine h2 { color: var(--encre); font-size: clamp(1.55rem, 2.9vw, 2.25rem); margin: 0 0 14px; }
+.acces-platine p { color: var(--encre-2); }
+.platine-surlabel {
+  font-family: var(--police-display); font-weight: 800; font-size: 0.72rem;
+  letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 14px;
+  background: var(--voltage-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.platine-liste { list-style: none; padding: 0; margin: 24px 0 0; }
+.platine-liste li { position: relative; padding-left: 30px; margin-bottom: 13px; color: var(--encre-2); }
+.platine-liste li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--voltage-2); font-weight: 800; }
+.platine-prix-carte {
+  background: var(--champ-fond);
+  border: 1px solid var(--carte-bord);
+  border-radius: var(--carte-rayon); padding: 32px 28px; text-align: center;
+}
+.platine-prix { font-family: var(--police-display); font-weight: 800; font-size: 3.2rem; line-height: 1; color: var(--encre); }
+.platine-prix small { font-size: 1.2rem; font-weight: 800; }
+.bouton-or {
+  display: inline-block; width: 100%; border: 0; cursor: pointer;
+  margin-top: 18px; padding: 15px 24px; border-radius: var(--rayon-bouton);
+  font-family: var(--police-display); font-weight: 800; font-size: 1rem;
+  background: var(--or-grad); color: var(--encre);
+  box-shadow: 0 12px 26px -12px rgba(216, 180, 95, 0.6);
+}
+.bouton-or:hover { text-decoration: none; transform: translateY(-1px); }
+.platine-note { font-size: 0.82rem; color: var(--encre-3); margin: 16px 0 0; }
+@media (max-width: 820px) { .acces-platine { grid-template-columns: 1fr; padding: 34px 28px; gap: 32px; } }
+
+/* Cartes verrouillées (premium flouté) */
+.chip-libre {
+  align-self: flex-start; margin-top: auto;
+  font-family: var(--police-display); font-size: 0.66rem; font-weight: 800;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--verdict-conforme); background: var(--verdict-conforme-fond);
+  padding: 4px 10px; border-radius: 999px;
+}
+.fiche-cadenas {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--police-display); font-size: 0.64rem; font-weight: 800;
+  letter-spacing: 0.09em; text-transform: uppercase; white-space: nowrap;
+  color: var(--encre-inverse); background: var(--voltage-grad);
+  padding: 4px 10px; border-radius: 999px;
+}
+.fiche-premium .fiche-piege-apercu { filter: blur(4px); user-select: none; -webkit-user-select: none; }
+.fiche-premium .debloquer {
+  margin-top: auto; font-family: var(--police-display); font-weight: 800; font-size: 0.86rem;
+  background: var(--titre-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* Paywall de fiche premium (détail) */
+.zone-premium { position: relative; }
+.flou-premium { filter: blur(7px); pointer-events: none; user-select: none; -webkit-user-select: none; }
+.paywall-fiche {
+  position: absolute; top: 28px; left: 50%; transform: translateX(-50%);
+  width: min(92%, 440px); text-align: center;
+  background: var(--carte); border: 1px solid var(--carte-bord);
+  border-radius: var(--carte-rayon); box-shadow: var(--platine-ombre);
+  padding: 30px 28px;
+}
+.paywall-fiche .cadenas-rond {
+  width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 14px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--voltage-grad); color: var(--encre-inverse);
+}
+.paywall-fiche h3 { margin: 0 0 8px; }

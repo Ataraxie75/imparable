@@ -1,11 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { LIBELLES_REGIME, LIBELLES_REGIME_COURT } from '../../lib/moteur/audit';
+import { LIBELLES_REGIME_COURT } from '../../lib/moteur/audit';
 
 const fiches = (await getCollection('resolutions', ({ data }) => data.published)).sort((a, b) =>
   a.data.titre.localeCompare(b.data.titre, 'fr'),
 );
+const nbGratuites = fiches.filter((f) => f.data.gratuite).length;
+const nbTotal = fiches.length;
 
 const CATEGORIES: Record<string, string> = {
   comptes: 'Comptes',
@@ -24,14 +26,41 @@ const regimesPresents = [...new Set(fiches.map((f) => f.data.regime))];
 
 <Layout
   titre="Bibliothèque de résolutions d'AG de copropriété"
-  description="Modèles de résolutions d'assemblée générale de copropriété : texte à copier, majorité requise (art. 24, 25, 26, unanimité), documents à joindre et piège juridique. Accès libre."
+  description="33 résolutions d'assemblée générale de copropriété : modèle de texte prêt à voter, majorité exacte vérifiée Légifrance et piège juridique. 5 fiches en accès libre."
 >
   <div class="conteneur section">
     <h1 class="section-titre titre-degrade">Bibliothèque de résolutions</h1>
     <p class="section-sous-titre">
-      {fiches.length} fiches en accès libre : modèle de texte, majorité requise, documents à
-      joindre, et le piège que les modèles gratuits ne signalent pas.
+      Chaque résolution prête à voter, avec sa majorité exacte vérifiée sur Légifrance et le piège
+      qui fait annuler l'assemblée. <strong>{nbGratuites} fiches en accès libre</strong>,
+      l'arsenal complet sur abonnement.
     </p>
+
+    <section class="acces-platine" id="acces">
+      <div>
+        <p class="platine-surlabel">Accès complet · à vie</p>
+        <h2>Les {nbTotal} résolutions qui blindent vos assemblées</h2>
+        <p>
+          Le manuel que votre syndic n'a pas. Pour chaque décision — des comptes à la révocation
+          du syndic — le modèle exact à recopier, la majorité qui tient devant le juge, et le piège
+          que personne ne vous signale. Conçu pour le conseil syndical qui ne laisse rien passer.
+        </p>
+        <ul class="platine-liste">
+          <li>{nbTotal} modèles de résolution prêts à recopier dans la convocation</li>
+          <li>La majorité exacte (art. 24, 25, 26, unanimité), vérifiée sur Légifrance</li>
+          <li>Le piège juridique de chaque résolution — le différenciateur</li>
+          <li>Les documents à joindre, résolution par résolution</li>
+          <li>Mises à jour à vie au fil des réformes</li>
+        </ul>
+      </div>
+      <div class="platine-prix-carte">
+        <p class="platine-surlabel" style="margin-bottom:6px;">Paiement unique</p>
+        <div class="platine-prix">29<small> €</small></div>
+        <p style="margin:4px 0 0;">Accès à vie · sans abonnement</p>
+        <a class="bouton-or" href="/audit">Débloquer l'accès &rarr;</a>
+        <p class="platine-note">Déjà {nbGratuites} fiches en libre accès ci-dessous.</p>
+      </div>
+    </section>
 
     <div class="filtres" id="filtres-categorie" role="group" aria-label="Filtrer par catégorie">
       <button class="filtre actif" data-filtre="">Toutes</button>
@@ -42,33 +71,51 @@ const regimesPresents = [...new Set(fiches.map((f) => f.data.regime))];
     <div class="filtres" id="filtres-regime" role="group" aria-label="Filtrer par majorité">
       <button class="filtre actif" data-filtre="">Toutes majorités</button>
       {regimesPresents.map((r) => (
-        <button class="filtre" data-filtre={r}>{LIBELLES_REGIME[r]}</button>
+        <button class="filtre" data-filtre={r}>{LIBELLES_REGIME_COURT[r]}</button>
       ))}
     </div>
 
     <div class="grille-3" id="grille-fiches">
-      {fiches.map((fiche) => (
-        <a
-          class="carte fiche-carte"
-          href={`/resolutions/${fiche.slug}/`}
-          data-categorie={fiche.data.categorie}
-          data-regime={fiche.data.regime}
-        >
-          <div class="fiche-meta">
-            <span class="fiche-cat">{CATEGORIES[fiche.data.categorie]}</span>
-            <span class="badge">
-              {LIBELLES_REGIME_COURT[fiche.data.regime]}{fiche.data.contextuel && ' ⚠'}
-            </span>
-          </div>
-          <h3>{fiche.data.titre}</h3>
-          <p class="fiche-piege-apercu">⚠ {fiche.data.piege}</p>
-        </a>
-      ))}
+      {fiches.map((fiche) =>
+        fiche.data.gratuite ? (
+          <a
+            class="carte fiche-carte"
+            href={`/resolutions/${fiche.slug}/`}
+            data-categorie={fiche.data.categorie}
+            data-regime={fiche.data.regime}
+          >
+            <div class="fiche-meta">
+              <span class="fiche-cat">{CATEGORIES[fiche.data.categorie]}</span>
+              <span class="badge">{LIBELLES_REGIME_COURT[fiche.data.regime]}{fiche.data.contextuel && ' ⚠'}</span>
+            </div>
+            <h3>{fiche.data.titre}</h3>
+            <p class="fiche-piege-apercu">⚠ {fiche.data.piege}</p>
+            <span class="chip-libre">Accès libre</span>
+          </a>
+        ) : (
+          <a
+            class="carte fiche-carte fiche-premium"
+            href={`/resolutions/${fiche.slug}/`}
+            data-categorie={fiche.data.categorie}
+            data-regime={fiche.data.regime}
+          >
+            <div class="fiche-meta">
+              <span class="fiche-cat">{CATEGORIES[fiche.data.categorie]}</span>
+              <span class="fiche-cadenas">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+                Premium
+              </span>
+            </div>
+            <h3>{fiche.data.titre}</h3>
+            <p class="fiche-piege-apercu" aria-hidden="true">⚠ {fiche.data.piege}</p>
+            <span class="debloquer">Débloquer l'accès &rarr;</span>
+          </a>
+        ),
+      )}
     </div>
   </div>
 
   <script>
-    // Filtre client-side simple (PRD §9) — pas de dépendance.
     const etat = { categorie: '', regime: '' };
     const fiches = document.querySelectorAll<HTMLElement>('#grille-fiches [data-categorie]');
 

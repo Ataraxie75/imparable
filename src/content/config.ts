@@ -31,6 +31,8 @@ const resolutions = defineCollection({
     piege: z.string().min(1),
     /** Item ⚠ Annexe A : régime indicatif, dépendant du contexte. */
     contextuel: z.boolean().default(false),
+    /** Accès libre (sinon premium, floutée derrière le paywall Bibliothèque). */
+    gratuite: z.boolean().default(false),
     published: z.boolean(),
   }),
 });

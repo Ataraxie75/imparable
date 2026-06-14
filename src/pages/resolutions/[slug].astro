@@ -99,33 +99,54 @@ const jsonLd = JSON.stringify(schema).replace(
 
     <div class="fiche-grille">
       <article>
-        <div class="modele-bloc">
-          <button class="bouton bouton-voltage bouton-copier" data-modele={corpsModele}>
-            Copier la résolution
-          </button>
-          <div class="prose">
-            <Content />
+        <div class={fiche.data.gratuite ? '' : 'zone-premium'}>
+          <div class={fiche.data.gratuite ? '' : 'flou-premium'}>
+            <div class="modele-bloc">
+              <button class="bouton bouton-voltage bouton-copier" data-modele={corpsModele}>
+                Copier la résolution
+              </button>
+              <div class="prose">
+                <Content />
+              </div>
+            </div>
+
+            {fiche.data.variables.length > 0 && (
+              <p class="aide" style="margin-top:14px;">
+                Variables à remplacer : {fiche.data.variables.map((v) => `{${v}}`).join(' · ')}
+              </p>
+            )}
+
+            {documentsExiges.length > 0 && (
+              <div class="carte" style="margin-top:24px;">
+                <h3>Documents à joindre à la convocation</h3>
+                <ul>
+                  {documentsExiges.map((doc) => <li>{doc}</li>)}
+                </ul>
+                <p class="aide">
+                  Notification au plus tard avec la convocation (art. 11, décret n°67-223 du 17 mars
+                  1967) : un document manquant expose la résolution à l'annulation.
+                </p>
+              </div>
+            )}
           </div>
+
+          {!fiche.data.gratuite && (
+            <div class="paywall-fiche">
+              <div class="cadenas-rond">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+              </div>
+              <h3>Fiche premium</h3>
+              <p>
+                Le modèle prêt à voter, la majorité exacte et le piège de cette résolution sont
+                réservés aux abonnés de la Bibliothèque.
+              </p>
+              <a class="bouton bouton-voltage" href="/resolutions#acces" style="width:100%;">
+                Débloquer la Bibliothèque — 29 €
+              </a>
+              <p class="aide" style="margin-top:10px;">Paiement unique · accès à vie</p>
+            </div>
+          )}
         </div>
-
-        {fiche.data.variables.length > 0 && (
-          <p class="aide" style="margin-top:14px;">
-            Variables à remplacer : {fiche.data.variables.map((v) => `{${v}}`).join(' · ')}
-          </p>
-        )}
-
-        {documentsExiges.length > 0 && (
-          <div class="carte" style="margin-top:24px;">
-            <h3>Documents à joindre à la convocation</h3>
-            <ul>
-              {documentsExiges.map((doc) => <li>{doc}</li>)}
-            </ul>
-            <p class="aide">
-              Notification au plus tard avec la convocation (art. 11, décret n°67-223 du 17 mars
-              1967) : un document manquant expose la résolution à l'annulation.
-            </p>
-          </div>
-        )}
 
         <div class="carte" style="margin-top:24px; text-align:center;">
           <h3>Cette résolution part dans une convocation&nbsp;?</h3>

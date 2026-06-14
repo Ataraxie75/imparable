@@ -9,6 +9,7 @@ documentsExiges:
   - "projet-contrat-syndic"
 variables: ["NOM_SYNDIC", "DATE_DEBUT", "DATE_FIN", "MONTANT_FORFAIT"]
 piege: "La désignation sans projet de contrat joint à la convocation est annulable : le contrat se vote en même temps que la désignation, pas après."
+gratuite: true
 published: true
 ---
 ## Modèle de résolution
