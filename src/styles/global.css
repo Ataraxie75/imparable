@@ -45,6 +45,14 @@ h3 { font-size: 1.25rem; }
   color: transparent;
 }
 
+/* Grand titre en dégradé noir → bleu → violet. */
+.titre-degrade {
+  background: var(--titre-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 p { margin: 0 0 1em; color: var(--encre-2); }
 
 a { color: var(--voltage-2); text-decoration: none; }

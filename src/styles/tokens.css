@@ -18,6 +18,8 @@
   --voltage-2: #6d5cf6;
   --voltage-3: #8b5cf6;
   --voltage-grad: linear-gradient(100deg, var(--voltage-1), var(--voltage-2) 50%, var(--voltage-3));
+  /* Dégradé de titre : noir → bleu → violet (sweep premium sur les grands titres). */
+  --titre-grad: linear-gradient(95deg, var(--encre) 8%, var(--voltage-1) 55%, var(--voltage-3));
   --voltage-ombre: rgba(99, 102, 241, 0.22);
 
   /* Encres — navy/ardoise neutres (l'indigo reste un accent, pas une teinte de fond) */
