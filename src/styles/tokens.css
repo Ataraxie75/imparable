@@ -9,15 +9,16 @@
  */
 :root {
   /* Fond */
-  --fond-debut: #f5effc;
-  --fond-fin: #f3ecfb;
+  --fond-debut: #f3f2fd;
+  --fond-fin: #eef0fe;
 
-  /* Voltage — chrome & CTA uniquement, jamais sur la sémantique verdict */
-  --voltage-1: #a855f7;
-  --voltage-2: #8b3df5;
-  --voltage-3: #c026d3;
-  --voltage-grad: linear-gradient(100deg, var(--voltage-1), var(--voltage-2) 55%, var(--voltage-3));
-  --voltage-ombre: rgba(139, 61, 245, 0.28);
+  /* Voltage — indigo → violet (DA inspirée des maquettes app), chrome & CTA
+     uniquement, jamais sur la sémantique verdict */
+  --voltage-1: #6366f1;
+  --voltage-2: #6d5cf6;
+  --voltage-3: #8b5cf6;
+  --voltage-grad: linear-gradient(100deg, var(--voltage-1), var(--voltage-2) 50%, var(--voltage-3));
+  --voltage-ombre: rgba(99, 102, 241, 0.30);
 
   /* Encres */
   --encre: #231a35;
@@ -27,10 +28,10 @@
 
   /* Surfaces */
   --carte: #ffffff;
-  --carte-bord: rgba(139, 61, 245, 0.12);
-  --carte-ombre: 0 18px 44px -18px rgba(139, 61, 245, 0.25);
+  --carte-bord: rgba(99, 102, 241, 0.13);
+  --carte-ombre: 0 18px 44px -18px rgba(99, 102, 241, 0.22);
   --carte-rayon: 24px;
-  --voile-violet: rgba(168, 85, 247, 0.08);
+  --voile-violet: rgba(99, 102, 241, 0.07);
 
   /* Sémantique verdict — jamais violet (PRD §13) */
   --verdict-conforme: #16a34a;
