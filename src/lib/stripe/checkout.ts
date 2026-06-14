@@ -18,15 +18,36 @@ export interface DemandeCheckout {
   reponses: ReponsesAudit;
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_EMAIL = 254;
+const MAX_RESOLUTIONS = 60;
+
 export async function creerSessionCheckout(
   demande: DemandeCheckout,
 ): Promise<{ url: string } | { erreur: string; statut: number }> {
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(demande.email)) {
+  // Validation défensive — endpoint public non authentifié.
+  if (!demande || typeof demande !== 'object') {
+    return { erreur: 'Requête invalide.', statut: 400 };
+  }
+  const { email, reponses } = demande;
+  if (typeof email !== 'string' || email.length > MAX_EMAIL || !EMAIL_RE.test(email)) {
     return { erreur: 'Adresse email invalide.', statut: 400 };
   }
+  if (!reponses || typeof reponses !== 'object' || Array.isArray(reponses)) {
+    return { erreur: "Données d'audit invalides.", statut: 400 };
+  }
+  if (Array.isArray(reponses.resolutions) && reponses.resolutions.length > MAX_RESOLUTIONS) {
+    return { erreur: 'Nombre de résolutions excessif.', statut: 400 };
+  }
 
-  // Recalcul serveur — zéro confiance dans le client.
-  const resultat = computeAudit(demande.reponses, TAXONOMIE);
+  // Recalcul serveur — zéro confiance dans le client. Toute donnée illisible
+  // (date inexistante, structure cassée) est rejetée proprement.
+  let resultat;
+  try {
+    resultat = computeAudit(reponses, TAXONOMIE);
+  } catch {
+    return { erreur: "Données d'audit illisibles.", statut: 422 };
+  }
   if (resultat.global === 'hors_perimetre') {
     return {
       erreur: "Cas hors périmètre : aucune attestation ne peut être émise (R7).",
@@ -38,8 +59,8 @@ export async function creerSessionCheckout(
   const { data: audit, error } = await supabase
     .from('audits')
     .insert({
-      email: demande.email,
-      reponses: demande.reponses,
+      email,
+      reponses,
       resultat,
       statut_global: resultat.global,
       rules_version: resultat.rulesVersion,
@@ -54,7 +75,7 @@ export async function creerSessionCheckout(
   const stripe = new Stripe(secret('STRIPE_SECRET_KEY'));
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
-    customer_email: demande.email,
+    customer_email: email,
     line_items: [
       {
         quantity: 1,

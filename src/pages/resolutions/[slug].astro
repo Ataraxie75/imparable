@@ -67,13 +67,19 @@ const schema = {
     },
   ],
 };
+
+// Échappe < > & avant injection dans le script JSON-LD (anti-breakout).
+const jsonLd = JSON.stringify(schema).replace(
+  /[<>&]/g,
+  (c) => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'),
+);
 ---
 
 <Layout
   titre={`${fiche.data.titre} — modèle et majorité`}
   description={`Modèle de résolution « ${fiche.data.titre} » : texte à copier, majorité requise (${LIBELLES_REGIME[fiche.data.regime]}), documents à joindre et piège juridique.`}
 >
-  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <script type="application/ld+json" is:inline set:html={jsonLd} />
 
   <div class="conteneur section">
     <nav class="aide" aria-label="Fil d'Ariane" style="margin-bottom: 18px;">

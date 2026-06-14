@@ -41,10 +41,16 @@ const schema = {
     },
   ],
 };
+
+// Échappe < > & avant injection dans le script JSON-LD (anti-breakout).
+const jsonLd = JSON.stringify(schema).replace(
+  /[<>&]/g,
+  (c) => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'),
+);
 ---
 
 <Layout titre={guide.data.titre} description={guide.data.description}>
-  <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
+  <script type="application/ld+json" is:inline set:html={jsonLd} />
 
   <div class="conteneur section">
     <nav class="aide" aria-label="Fil d'Ariane" style="margin-bottom: 18px;">
