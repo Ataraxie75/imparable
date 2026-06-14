@@ -123,13 +123,16 @@ export default function Resultat({ resultat, reponses, onRecommencer }: Props) {
         </div>
         <div className="paywall-voile">
           <div className="carte" style={{ maxWidth: 440 }}>
-            <h3>Débloquez le détail point par point</h3>
-            <p style={{ fontSize: '0.95rem' }}>
-              Chaque cause de nullité expliquée avec sa référence légale, son action corrective,
-              et votre {resultat.global === 'conforme' ? 'attestation' : 'rapport'} PDF numéroté,
-              vérifiable en ligne.
+            <h3>Débloquez tout pour 14,99 €</h3>
+            <p style={{ fontSize: '0.95rem', marginBottom: 12 }}>
+              Votre verdict est gratuit. Le paiement vous donne&nbsp;:
             </p>
-            <label className="etiquette" htmlFor="paywall-email">Email de livraison</label>
+            <ul className="prix-liste" style={{ marginBottom: 18 }}>
+              <li>Comment corriger chaque point, avec la référence légale</li>
+              <li>Votre {resultat.global === 'conforme' ? 'attestation' : 'rapport'} PDF officiel, numéroté</li>
+              <li>Vérifiable en ligne par votre syndic ou un juge</li>
+            </ul>
+            <label className="etiquette" htmlFor="paywall-email">Votre email (pour recevoir le PDF)</label>
             <input
               id="paywall-email"
               className="champ"
@@ -147,13 +150,13 @@ export default function Resultat({ resultat, reponses, onRecommencer }: Props) {
               disabled={enCours}
               onClick={payer}
             >
-              {enCours ? 'Redirection vers le paiement…' : 'Obtenir l’audit complet + attestation — 14,99 €'}
+              {enCours ? 'Redirection vers le paiement…' : 'Payer 14,99 € et débloquer'}
             </button>
             {message && (
               <p className="aide" style={{ marginTop: 10 }}>{message}</p>
             )}
             <p className="aide" style={{ marginTop: 10 }}>
-              <a href="/specimen-attestation">Voir un spécimen d'attestation</a>
+              Paiement sécurisé par Stripe · <a href="/specimen-attestation">voir un exemple</a>
             </p>
           </div>
         </div>

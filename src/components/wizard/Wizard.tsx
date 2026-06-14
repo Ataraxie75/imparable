@@ -189,6 +189,7 @@ export default function Wizard() {
                 <option value="main_propre">Remise en main propre contre récépissé/émargement</option>
                 <option value="lre">Lettre recommandée électronique</option>
               </select>
+              <p className="aide">Comment la convocation est partie chez les copropriétaires.</p>
             </div>
             <div>
               <label className="etiquette" htmlFor="wiz-notif">
@@ -205,6 +206,13 @@ export default function Wizard() {
                 value={etat.dateNotification}
                 onChange={(e) => maj({ dateNotification: e.target.value })}
               />
+              <p className="aide">
+                {etat.mode === 'lrar'
+                  ? 'La date où le courrier a été présenté au domicile (sur l’accusé de réception / l’avis de passage), pas la date d’envoi.'
+                  : etat.mode === 'main_propre'
+                    ? 'La date où la convocation a été remise en main propre.'
+                    : 'La date d’envoi du recommandé électronique.'}
+              </p>
             </div>
             <div>
               <label className="etiquette" htmlFor="wiz-ag">Date de l’assemblée</label>
@@ -215,6 +223,7 @@ export default function Wizard() {
                 value={etat.dateAG}
                 onChange={(e) => maj({ dateAG: e.target.value })}
               />
+              <p className="aide">La date prévue de la réunion, indiquée sur la convocation.</p>
             </div>
             <div className="pleine-largeur">
               <label className="etiquette" htmlFor="wiz-delai">Délai du règlement de copropriété (jours)</label>

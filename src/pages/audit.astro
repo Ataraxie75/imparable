@@ -6,8 +6,7 @@ import { TAXONOMIE } from '../lib/moteur/taxonomie.generated';
 import { ATTESTATION_CSS, attestationFragmentHTML } from '../lib/pdf/attestation';
 import type { ReponsesAudit } from '../lib/moteur/types';
 
-// Aperçu généré par le VRAI moteur, sur un cas avec défauts : preuve de
-// valeur affichée en haut de page (en-tête + verdict + corrections).
+// Rapport d'exemple généré par le vrai moteur (cas avec défauts).
 const exemple: ReponsesAudit = {
   delai: { mode: 'lrar', dateNotification: '2026-05-12', dateAG: '2026-06-02' },
   modeAdmisPourTous: true,
@@ -30,31 +29,57 @@ const rapportExemple = attestationFragmentHTML(exemple, resultatExemple, {
 
 <Layout
   titre="Vérifier votre convocation d'AG — audit gratuit"
-  description="Vérifiez les causes de nullité de votre convocation d'assemblée générale de copropriété : délai, notification, mentions, documents joints, majorités, convocateur. Verdict gratuit, rapport à 14,99 €."
+  description="Vérifiez les causes de nullité de votre convocation d'assemblée générale de copropriété : délai, notification, mentions, documents, majorités, convocateur. Verdict gratuit, rapport à 14,99 €."
 >
   <style is:global set:html={ATTESTATION_CSS}></style>
   <div class="conteneur section">
     <h1 class="section-titre titre-degrade">Vérifiez votre convocation</h1>
     <p class="section-sous-titre">
-      5 questions, 3 minutes, verdict gratuit. Voici le rapport que vous obtenez :
+      Gardez votre convocation sous les yeux. Vous recopiez quelques infos, on vous dit si votre
+      AG est attaquable. Gratuit, en 3 minutes.
     </p>
 
-    <div class="apercu-rapport">
-      <Fragment set:html={rapportExemple} />
+    <div class="grille-3" style="margin-bottom: 44px;">
+      <div class="carte etape-carte">
+        <div class="etape-num">1</div>
+        <h3>Répondez</h3>
+        <p>Recopiez les infos de votre convocation et cochez des cases. 5 étapes simples.</p>
+      </div>
+      <div class="carte etape-carte">
+        <div class="etape-num">2</div>
+        <h3>Verdict gratuit</h3>
+        <p>Attaquable ou pas — tout de suite, sans inscription.</p>
+      </div>
+      <div class="carte etape-carte">
+        <div class="etape-num">3</div>
+        <h3>Rapport — en option</h3>
+        <p>Le détail des corrections + l'attestation PDF officielle, pour 14,99 €.</p>
+      </div>
     </div>
-    <p style="text-align:center; margin-top:14px;">
-      <a class="bouton bouton-secondaire" href="/specimen-attestation">Voir l'exemple complet</a>
-    </p>
 
-    <div class="audit-questions">
+    <h2 class="section-titre titre-degrade" style="font-size:clamp(1.5rem,3vw,2rem);">
+      Commencez votre audit
+    </h2>
+    <p class="section-sous-titre">
+      Aucun nom, aucune donnée de tiers : seulement des dates et des cases. La saisie est conservée
+      dans votre navigateur.
+    </p>
+    <Wizard client:load />
+
+    <section class="section">
       <h2 class="section-titre titre-degrade" style="font-size:clamp(1.5rem,3vw,2rem);">
-        Répondez à ces questions
+        Voici le rapport que vous obtenez
       </h2>
       <p class="section-sous-titre">
-        Aucun nom, aucune donnée de tiers : seulement des dates et des cases à cocher. Vos réponses
-        restent dans votre navigateur et la saisie est conservée.
+        Synthèse de vos corrections, calcul du délai à nu, puis chaque point avec son action et sa
+        référence. Vérifiable en ligne par n'importe qui.
       </p>
-      <Wizard client:load />
-    </div>
+      <div class="apercu-rapport">
+        <Fragment set:html={rapportExemple} />
+      </div>
+      <p style="text-align:center; margin-top:14px;">
+        <a class="bouton bouton-secondaire" href="/specimen-attestation">Voir l'exemple complet</a>
+      </p>
+    </section>
   </div>
 </Layout>
