@@ -14,7 +14,10 @@ interface Props {
 }
 
 const { guide } = Astro.props;
-const { Content } = await guide.render();
+const { Content, headings } = await guide.render();
+
+// Sommaire : les titres de niveau 2 du guide (PRD §20, maillage & lisibilité).
+const sommaire = headings.filter((h) => h.depth === 2);
 
 const fichesLiees = (
   await Promise.all(guide.data.fichesLiees.map((slug) => getEntry('resolutions', slug)))
@@ -45,15 +48,34 @@ const schema = {
   <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
 
   <div class="conteneur section">
-    <nav class="aide" aria-label="Fil d'Ariane" style="margin-bottom: 18px;">
-      <a href="/guides">Guides</a> · {guide.data.titre}
+    <nav class="aide" aria-label="Fil d'Ariane" style="margin-bottom: 16px;">
+      <a href="/guides">Guides anti-annulation</a> · {guide.data.titre}
     </nav>
     <h1>{guide.data.titre}</h1>
-    <p class="aide">Règles vérifiées au {guide.data.verifieLe}.</p>
+    <p class="guide-chiffre" style="display:block; padding:18px 24px;">
+      <span class="guide-chiffre-txt">{guide.data.description}</span>
+    </p>
+    <p class="aide" style="margin-top:6px;">Règles vérifiées au {guide.data.verifieLe} · références à l'appui dans chaque section.</p>
 
     <div class="fiche-grille" style="margin-top: 24px;">
       <article class="prose carte">
+        {sommaire.length > 1 && (
+          <div class="sommaire">
+            <p class="sommaire-titre">Dans ce guide</p>
+            <ol>
+              {sommaire.map((h) => (
+                <li><a href={`#${h.slug}`}>{h.text}</a></li>
+              ))}
+            </ol>
+          </div>
+        )}
         <Content />
+
+        <div class="carte" style="margin-top:28px; text-align:center; background:var(--voile-violet); border:0;">
+          <h3 style="margin-top:0;">Une convocation concernée&nbsp;?</h3>
+          <p>Vérifiez les 10 causes de nullité, point par point — 3 minutes, verdict gratuit.</p>
+          <a class="bouton bouton-voltage" href="/audit">Vérifier ma convocation</a>
+        </div>
       </article>
 
       <aside>
@@ -69,11 +91,6 @@ const schema = {
             ))}
           </div>
         )}
-        <div class="carte" style="margin-top:24px; text-align:center;">
-          <h3>Une convocation à vérifier&nbsp;?</h3>
-          <p>Les 10 causes de nullité, point par point.</p>
-          <a class="bouton bouton-voltage" href="/audit">Lancer l'audit</a>
-        </div>
       </aside>
     </div>
   </div>

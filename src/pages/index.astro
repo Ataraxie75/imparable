@@ -25,12 +25,6 @@ const tarifs = [
       'Audit des 5 blocs de causes de nullité + attestation PDF numérotée, vérifiable en ligne.',
     vedette: true,
   },
-  {
-    nom: 'Pass Cabinet',
-    prix: '290 €',
-    suffixe: '/ an',
-    detail: 'Audits et attestations illimités, logo du cabinet sur les PDF, historique, multi-utilisateurs.',
-  },
 ];
 ---
 
@@ -120,7 +114,7 @@ const tarifs = [
       <p class="section-sous-titre">
         Le verdict et la Bibliothèque sont gratuits. Le payant, c'est la preuve.
       </p>
-      <div class="grille-4">
+      <div class="grille-3">
         {tarifs.map((t) => (
           <div class={`carte ${t.vedette ? 'carte-vedette' : ''}`}>
             {t.vedette && <span class="badge">Le produit</span>}
