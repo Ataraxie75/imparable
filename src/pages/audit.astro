@@ -63,7 +63,7 @@ const rapportExemple = attestationFragmentHTML(exemple, resultatExemple, {
       </a>
     </p>
 
-    <div id="commencer" style="scroll-margin-top: 90px;">
+    <div id="commencer" hidden style="scroll-margin-top: 90px;">
       <h2 class="section-titre titre-degrade" style="font-size:clamp(1.5rem,3vw,2rem);">
         Étape 1 — répondez aux questions
       </h2>
@@ -92,17 +92,19 @@ const rapportExemple = attestationFragmentHTML(exemple, resultatExemple, {
   </div>
 
   <script>
-    // Le CTA emmène jusqu'aux questions ET place le curseur dans le 1er champ,
-    // pour que le clic produise un effet immédiat et visible.
+    // Le clic LANCE l'audit : le questionnaire (masqué à l'arrivée) apparaît,
+    // la page glisse dessus et le curseur se place dans le 1er champ.
     const cta = document.getElementById('cta-commencer');
+    const zone = document.getElementById('commencer');
     cta?.addEventListener('click', (e) => {
       e.preventDefault();
-      const cible = document.getElementById('commencer');
-      cible?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (!zone) return;
+      zone.hidden = false;
+      zone.scrollIntoView({ behavior: 'smooth', block: 'start' });
       // Le wizard est hydraté côté client : on attend le champ puis on le focus.
       let essais = 0;
       const t = setInterval(() => {
-        const champ = document.querySelector<HTMLInputElement>('#commencer input, #commencer select');
+        const champ = zone.querySelector<HTMLInputElement>('input, select');
         if (champ) {
           champ.focus({ preventScroll: true });
           clearInterval(t);
