@@ -228,6 +228,15 @@
 }
 .wizard-actions .bouton-voltage { padding: 14px 30px; font-size: 1.02rem; }
 
+/* CTA principal de la page audit : impossible à manquer. */
+.bouton-cta-audit {
+  padding: 18px 44px;
+  font-size: 1.15rem;
+  border-radius: 14px;
+  box-shadow: 0 18px 40px -12px var(--voltage-ombre);
+}
+.bouton-cta-audit:hover { transform: translateY(-2px); }
+
 /* Cas particulier repliable (étape 1) */
 .wizard-avance { border: 1px dashed var(--carte-bord); border-radius: var(--rayon-champ); padding: 12px 16px; }
 .wizard-avance > summary {
