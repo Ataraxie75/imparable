@@ -58,7 +58,7 @@ const rapportExemple = attestationFragmentHTML(exemple, resultatExemple, {
     </div>
 
     <p style="text-align:center; margin-bottom: 56px;">
-      <a class="bouton bouton-voltage bouton-cta-audit" href="#commencer">
+      <a id="cta-commencer" class="bouton bouton-voltage bouton-cta-audit" href="#commencer">
         Commencer mon audit gratuit →
       </a>
     </p>
@@ -90,4 +90,26 @@ const rapportExemple = attestationFragmentHTML(exemple, resultatExemple, {
       </p>
     </section>
   </div>
+
+  <script>
+    // Le CTA emmène jusqu'aux questions ET place le curseur dans le 1er champ,
+    // pour que le clic produise un effet immédiat et visible.
+    const cta = document.getElementById('cta-commencer');
+    cta?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const cible = document.getElementById('commencer');
+      cible?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Le wizard est hydraté côté client : on attend le champ puis on le focus.
+      let essais = 0;
+      const t = setInterval(() => {
+        const champ = document.querySelector<HTMLInputElement>('#commencer input, #commencer select');
+        if (champ) {
+          champ.focus({ preventScroll: true });
+          clearInterval(t);
+        } else if (++essais > 20) {
+          clearInterval(t);
+        }
+      }, 100);
+    });
+  </script>
 </Layout>
