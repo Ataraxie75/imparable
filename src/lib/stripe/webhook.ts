@@ -6,9 +6,8 @@
  * numéro généré côté serveur (séquence SQL) · document stocké en bucket
  * privé, lié par URL signée · SHA-256 stocké.
  *
- * Format du document : HTML autoporté (template SPEC-PDF). Le rendu PDF
- * (décision @react-pdf vs playwright-chromium, qualité typographique
- * prioritaire) se branche dans `genererDocument` sans toucher au reste.
+ * Format du document : PDF, rendu par Chromium headless à partir du HTML
+ * autoporté du template SPEC-PDF (voir `pdf/rendu.ts`).
  */
 import { createHash } from 'node:crypto';
 import { Resend } from 'resend';
@@ -17,6 +16,7 @@ import {
   attestationDocumentHTML,
   typeDocument,
 } from '../pdf/attestation';
+import { htmlVersPdf } from '../pdf/rendu';
 import type { ReponsesAudit, ResultatAudit } from '../moteur/types';
 import { secret, urlSite } from '../serveur/env';
 import { clientServiceRole } from '../serveur/supabase';
@@ -24,9 +24,11 @@ import { htmlLivraison, sujetLivraison, texteLivraison } from '../email/livraiso
 
 const BUCKET = 'attestations';
 
-function genererDocument(html: string): { contenu: Buffer; contentType: string; extension: string } {
-  // Point d'extension LOT 4 : remplacer par le rendu PDF retenu.
-  return { contenu: Buffer.from(html, 'utf8'), contentType: 'text/html; charset=utf-8', extension: 'html' };
+async function genererDocument(
+  html: string,
+): Promise<{ contenu: Buffer; contentType: string; extension: string }> {
+  const contenu = await htmlVersPdf(html);
+  return { contenu, contentType: 'application/pdf', extension: 'pdf' };
 }
 
 export async function traiterPaiementValide(stripeSessionId: string): Promise<{ ok: boolean; detail: string }> {
@@ -74,7 +76,7 @@ export async function traiterPaiementValide(stripeSessionId: string): Promise<{ 
     tokensCss,
   );
 
-  const document = genererDocument(html);
+  const document = await genererDocument(html);
   const sha256 = createHash('sha256').update(document.contenu).digest('hex');
   const chemin = `${numero}.${document.extension}`;
 
@@ -115,7 +117,7 @@ export async function traiterPaiementValide(stripeSessionId: string): Promise<{ 
 }
 
 /** URL signée (7 jours) vers le document stocké — utilisée par E6. */
-export async function lienDocument(numero: string, extension = 'html'): Promise<string | null> {
+export async function lienDocument(numero: string, extension = 'pdf'): Promise<string | null> {
   const supabase = clientServiceRole();
   const { data } = await supabase.storage
     .from(BUCKET)
