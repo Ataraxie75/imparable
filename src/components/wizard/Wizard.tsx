@@ -112,6 +112,9 @@ function typeDeResolution(slug: string | null) {
 export default function Wizard() {
   const [etat, setEtat] = useState<EtatWizard>(ETAT_INITIAL);
   const [charge, setCharge] = useState(false);
+  // Le clic LANCE l'audit. Géré ici, dans l'îlot React déjà hydraté,
+  // pour ne dépendre d'aucun script externe.
+  const [demarre, setDemarre] = useState(false);
 
   // Reprise de session : localStorage uniquement côté client (PRD E4).
   // À défaut de session en cours, reprend la saisie du calculateur (S1) :
@@ -161,6 +164,29 @@ export default function Wizard() {
   );
 
   const etapeCourante = ETAPES[Math.min(etat.etape, ETAPES.length - 1)] ?? ETAPES[0];
+
+  // Focus le 1er champ dès que l'audit démarre, pour un effet immédiat.
+  useEffect(() => {
+    if (demarre) {
+      const champ = document.querySelector<HTMLElement>('.calculateur input, .calculateur select');
+      champ?.focus();
+    }
+  }, [demarre]);
+
+  // Écran de départ : on ne montre QUE le bouton tant qu'il n'est pas cliqué.
+  if (!demarre) {
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <button
+          type="button"
+          className="bouton bouton-voltage bouton-cta-audit"
+          onClick={() => setDemarre(true)}
+        >
+          Commencer mon audit gratuit →
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="carte calculateur" style={{ maxWidth: 760, margin: '0 auto' }}>

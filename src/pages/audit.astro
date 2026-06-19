@@ -57,22 +57,13 @@ const rapportExemple = attestationFragmentHTML(exemple, resultatExemple, {
       </div>
     </div>
 
-    <p style="text-align:center; margin-bottom: 56px;">
-      <a id="cta-commencer" class="bouton bouton-voltage bouton-cta-audit" href="#commencer">
-        Commencer mon audit gratuit →
-      </a>
-    </p>
-
-    <div id="commencer" hidden style="scroll-margin-top: 90px;">
-      <h2 class="section-titre titre-degrade" style="font-size:clamp(1.5rem,3vw,2rem);">
-        Étape 1 — répondez aux questions
-      </h2>
-      <p class="section-sous-titre">
-        Aucun nom, aucune donnée de tiers : seulement des dates et des cases. La saisie est conservée
-        dans votre navigateur.
-      </p>
+    <div id="commencer" style="scroll-margin-top: 90px; margin-bottom: 56px;">
       <Wizard client:load />
     </div>
+    <p class="section-sous-titre" style="margin-top: -36px;">
+      Aucun nom, aucune donnée de tiers : seulement des dates et des cases.
+      La saisie est conservée dans votre navigateur.
+    </p>
 
     <section class="section">
       <h2 class="section-titre titre-degrade" style="font-size:clamp(1.5rem,3vw,2rem);">
@@ -90,28 +81,4 @@ const rapportExemple = attestationFragmentHTML(exemple, resultatExemple, {
       </p>
     </section>
   </div>
-
-  <script>
-    // Le clic LANCE l'audit : le questionnaire (masqué à l'arrivée) apparaît,
-    // la page glisse dessus et le curseur se place dans le 1er champ.
-    const cta = document.getElementById('cta-commencer');
-    const zone = document.getElementById('commencer');
-    cta?.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!zone) return;
-      zone.hidden = false;
-      zone.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // Le wizard est hydraté côté client : on attend le champ puis on le focus.
-      let essais = 0;
-      const t = setInterval(() => {
-        const champ = zone.querySelector<HTMLInputElement>('input, select');
-        if (champ) {
-          champ.focus({ preventScroll: true });
-          clearInterval(t);
-        } else if (++essais > 20) {
-          clearInterval(t);
-        }
-      }, 100);
-    });
-  </script>
 </Layout>
