@@ -180,7 +180,12 @@ export default function Wizard() {
         <button
           type="button"
           className="bouton bouton-voltage bouton-cta-audit"
-          onClick={() => setDemarre(true)}
+          onClick={() => {
+            // « Commencer » dépose toujours sur la 1re question, jamais sur
+            // l'écran de résultat/paiement d'une session précédente terminée.
+            setEtat((e) => ({ ...e, etape: 0 }));
+            setDemarre(true);
+          }}
         >
           Commencer mon audit gratuit →
         </button>
