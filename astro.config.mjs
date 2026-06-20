@@ -10,6 +10,8 @@ import vercel from '@astrojs/vercel/serverless';
 export default defineConfig({
   site: 'https://imparable.fr',
   output: 'hybrid',
-  adapter: vercel(),
+  // maxDuration : le webhook Stripe rend l'attestation en PDF via Chromium
+  // headless (cold start possible) — on laisse le temps avant un échec/rejeu.
+  adapter: vercel({ maxDuration: 60 }),
   integrations: [react(), sitemap()],
 });

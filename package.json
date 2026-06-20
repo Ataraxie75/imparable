@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "description": "IMPARABLE — Vérificateur de conformité des AG de copropriété + Bibliothèque de résolutions",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "predev": "node scripts/gen-taxonomie.mjs",
     "dev": "astro dev",
@@ -20,8 +23,10 @@
     "@astrojs/react": "^3.6.3",
     "@astrojs/sitemap": "3.2.1",
     "@astrojs/vercel": "^7.8.2",
+    "@sparticuz/chromium": "^143.0.4",
     "@supabase/supabase-js": "^2.108.1",
     "astro": "^4.16.18",
+    "puppeteer-core": "^24.43.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "resend": "^6.12.4",
